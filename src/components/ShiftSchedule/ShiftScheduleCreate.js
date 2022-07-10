@@ -10,15 +10,14 @@ import {
   NumberInput,
 } from "react-admin";
 import axios from "axios";
+import { URI } from "../../URLS";
 
 const ShiftScheduleListCreate = (props) => {
   const [placeId, setPlace] = useState([]);
   const [employeeId, setEmployee] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getPlacesWithInfo?employeeId=reload&regionId=TX"
-      )
+      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`)
       .then((data) => {
         console.log(data);
         const place = data.data.map((item) => {
@@ -29,9 +28,7 @@ const ShiftScheduleListCreate = (props) => {
   }, [setPlace]);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getEmployees?employeeId=reload&regionId=TX"
-      )
+      .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
       .then((data) => {
         console.log(data);
         const employee = data.data.map((item) => {
@@ -40,7 +37,11 @@ const ShiftScheduleListCreate = (props) => {
         setEmployee(employee);
       });
   }, [setPlace]);
-  console.log(placeId);
+  console.log("knjbvgfcghj", placeId);
+  const shiftManager = [
+    { id: true, name: true },
+    { id: false, name: false },
+  ];
   return (
     <Create
       title="Create a shift"
@@ -50,6 +51,7 @@ const ShiftScheduleListCreate = (props) => {
     >
       <SimpleForm>
         <SelectInput source="placeId" choices={placeId} label="PlaceId" />
+
         <SelectInput
           source="employeeId"
           choices={employeeId}
@@ -63,6 +65,11 @@ const ShiftScheduleListCreate = (props) => {
           label="Soft Start In Minutes"
         />
         <NumberInput source="softEndInMinutes" label="Soft End In Minutes" />
+        <SelectInput
+          source="shiftManager"
+          choices={shiftManager}
+          label="shiftManager"
+        />
       </SimpleForm>
     </Create>
   );

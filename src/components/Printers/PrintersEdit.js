@@ -9,15 +9,14 @@ import {
   NumberInput,
   Edit,
 } from "react-admin";
+import { URI } from "../../URLS";
 
 const PrintersEdit = (props) => {
   const [regions, setRegions] = useState([]);
   console.log("regions", regions);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getPlacesWithInfo?employeeId=reload&regionId=TX"
-      )
+      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`)
       .then((data) => {
         const reg = data.data.map((item) => {
           return { id: item.placeId, name: item.placeId };

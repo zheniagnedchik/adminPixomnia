@@ -8,15 +8,13 @@ import {
   SelectInput,
   NumberInput,
 } from "react-admin";
-
+import { URI } from "../../URLS";
 const EmployeesCreate = (props) => {
   const [regions, setRegions] = useState([]);
   console.log("regions", regions);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getRegions?employeeId=admin@pixomnia.com"
-      )
+      .get(`${URI}/getRegions?employeeId=admin@pixomnia.com`)
       .then((data) => {
         const reg = data.data.map((item) => {
           return { id: item.regionId, name: item.regionId };

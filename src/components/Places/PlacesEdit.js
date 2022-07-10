@@ -8,15 +8,14 @@ import {
   SimpleFormIterator,
   TextInput,
 } from "react-admin";
+import { URI } from "../../URLS";
 
 const PlacesEdit = (props) => {
   const [printerId, setPrinterId] = useState([]);
   const [employeeId, setEmployee] = useState([]);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getPrinters?employeeId=reload&regionId=TX"
-      )
+      .get(`${URI}/getPrinters?employeeId=reload&regionId=TX`)
       .then((data) => {
         console.log(data);
         const printer = data.data.map((item) => {
@@ -27,9 +26,7 @@ const PlacesEdit = (props) => {
   }, [setPrinterId]);
   useEffect(() => {
     axios
-      .get(
-        "http://dev-api-v1.pixomnia.com:8087/getEmployees?employeeId=reload&regionId=TX"
-      )
+      .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
       .then((data) => {
         console.log(data);
         const employee = data.data.map((item) => {
