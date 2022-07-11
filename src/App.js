@@ -44,17 +44,9 @@ import ClosedShiftStatistic from "./components/ShiftStatistic/ClosedShiftStatist
 import EmployeeGrid from "./components/ShiftStatistic/EmployeeGrid";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
 import OpenShiftStatistic from "./components/ShiftStatistic/OpenShiftStatistic";
+import { sort } from "./Utils/sort";
 
 function App() {
-  console.log("URI", URI);
-  const lightTheme = defaultTheme;
-  const darkTheme = {
-    ...defaultTheme,
-    palette: {
-      mode: "dark",
-    },
-  };
-
   const setBody = (resource, params) => {
     switch (resource) {
       case "addPlace":
@@ -68,6 +60,7 @@ function App() {
           startTime: getCurrentDate(params.data.startTime),
           endTime: getCurrentDate(params.data.endTime),
           softStartInMinutes: params.data.softStartInMinutes,
+          softEndInMinutes: params.data.softEndInMinutes,
           shiftManager: params.data.shiftManager,
         };
         return param;
@@ -79,7 +72,7 @@ function App() {
   const getLink = (resource, params, body) => {
     const date = getCurrentDate(new Date());
     const curDate = new Date();
-    const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
+    const dateInventoryLogs = curDate.setDate(curDate.getDate() - 2);
 
     console.log(date);
     switch (resource) {
@@ -133,57 +126,11 @@ function App() {
         new_data = getListData.data.map((i, index) => {
           return { ...i, id: index };
         });
+        console.log(new_data);
         return new_data;
     }
   };
-  const sort = (field, order, array) => {
-    console.log("field", field);
-    switch (field) {
-      case "clockInTime":
-        if (order === "ASC") {
-          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
-        } else {
-          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
-        }
-      case "clockOutTime":
-        if (order === "ASC") {
-          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
-        } else {
-          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
-        }
-      case "startTime":
-        if (order === "ASC") {
-          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
-        } else {
-          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
-        }
-      case "endTime":
-        if (order === "ASC") {
-          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
-        } else {
-          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
-        }
 
-      default:
-        if (order === "ASC") {
-          return array.sort((a, b) => {
-            if (typeof a.field === "string") {
-              return a[field].localeCompare(b[field]);
-            } else {
-              return a[field] - b[field];
-            }
-          });
-        } else {
-          return array.sort((a, b) => {
-            if (typeof a.field === "string") {
-              return b[field].localeCompare(a[field]);
-            } else {
-              return b[field] - a[field];
-            }
-          });
-        }
-    }
-  };
   const test = async (type, resource, params) => {
     const body = "employeeId=reload&regionId=TX";
     console.log("type", type);
@@ -203,49 +150,63 @@ function App() {
         } else {
           test = [...newData];
         }
-
+        console.log(test);
         const sortedList = sort(params.sort.field, params.sort.order, test);
         return { data: sortedList, total: getListData.data.length };
       case CREATE:
+        console.log(params);
         const createBody = setBody(resource, params);
         const create = await axios.post(`${URI}/${resource}`, createBody);
         const jsonParse = JSON.parse(create.data.responseJson);
         const createData = { id: 9, ...jsonParse };
         return { data: createData };
       case GET_ONE:
-        const list = await axios.get(`${URI}/${resource}?${body}`);
+        if (resource === "getPlacesWithInfo") {
+          console.log(resource);
+          const list = await axios.get(`${URI}/${resource}?${body}`);
+          let g = list.data.map((i, index) => {
+            let printer = i.printerIds.map((it) => {
+              return { item: it };
+            });
 
-        // const list_data = list.data.map((i, index) => {
-        //   return { ...i, id: index };
-        // });
-        let g = list.data.map((i, index) => {
-          let printer = i.printerIds.map((it) => {
-            return { item: it };
+            let employee = i.employeeIds.map((it) => {
+              return { item: it };
+            });
+            const printFilter = printer.filter((el) => el.item.length > 0);
+            const employeeFilter = employee.filter((el) => el.item.length > 0);
+            console.log(printFilter);
+            return {
+              ...i,
+              newList: printFilter,
+              id: index,
+              employee: employeeFilter,
+            };
           });
+          const filter = g.filter((item) => item.id == params.id);
+          return { data: filter[0] };
+        }
+        if (resource === "getPrinters") {
+          const curDate = new Date();
+          const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
+          const printerList = await axios.get(`${URI}/${resource}?${body}`);
+          const newArray = printerList.data.map((item, index) => {
+            return { ...item, id: index };
+          });
+          const printer = newArray.filter((el) => String(el.id) === params.id);
+          const printerLog = await axios.get(
+            `${URI}/getPrinterInfoLogs?employeeId=admin@pixomnia.com&printerId=${
+              printer[0].printerId
+            }&fromTime=${new Date(dateInventoryLogs).toISOString()}`
+          );
+          let id = printerLog.data.map((item, index) => {
+            return { ...item, id: index };
+          });
+          const printers = { id: 0, printer: id };
+          return { data: printers };
+        }
 
-          let employee = i.employeeIds.map((it) => {
-            return { item: it };
-          });
-          const printFilter = printer.filter((el) => el.item.length > 0);
-          const employeeFilter = employee.filter((el) => el.item.length > 0);
-          console.log(printFilter);
-          return {
-            ...i,
-            newList: printFilter,
-            id: index,
-            employee: employeeFilter,
-          };
-        });
-        const filter = g.filter((item) => item.id == params.id);
-        console.log("filter", filter);
-        return { data: filter[0] };
       case UPDATE:
-        console.log("paramfdfd", params);
         const udpList = await axios.get(`${URI}/${resource}?${body}`);
-
-        // const list_data = list.data.map((i, index) => {
-        //   return { ...i, id: index };
-        // });
         let udp = udpList.data.map((i, index) => {
           let printer = i.printerIds.map((it) => {
             return { item: it };
@@ -318,43 +279,6 @@ function App() {
           }
         }
 
-        // newPrinters.map(async (item) => {
-        //   await axios
-        //     .post(`http://dev-api-v1.pixomnia.com:8087/linkPrinterAndPlace`, {
-        //       placeId: params.data.placeId,
-        //       printerId: item.item,
-        //     })
-        //     .then((data) => console.log(data));
-        // });
-
-        // delPrinters.map(async (item) => {
-        //   await axios
-        //     .post(
-        //       `http://dev-api-v1.pixomnia.com:8087/unlinkPrinterFromPlace`,
-        //       {
-        //         placeId: params.data.placeId,
-        //         printerId: item.item,
-        //       }
-        //     )
-        //     .then((data) => console.log(data));
-        // });
-        // return { data: filter[0] };
-        // let update;
-        // if (resource === "getEmployees") {
-        //   update = await axios.post(
-        //     `http://dev-api-v1.pixomnia.com:8087/linkEmployeeAndPlace`,
-        //     { placeId: params.data.placeId, employeeId: params.data.email }
-        //   );
-        // }
-        // if (resource === "getPrinters") {
-        //   update = await axios.post(
-        //     `http://dev-api-v1.pixomnia.com:8087/linkPrinterAndPlace`,
-        //     { placeId: params.data.placeId, printerId: params.data.printerId }
-        //   );
-        // }
-
-        // const jsonParseUpd = JSON.parse(update.data.responseJson);
-        // const updData = { id: 9, ...jsonParseUpd };
         return { data: params.data };
       case DELETE:
         console.log(params);
@@ -378,9 +302,9 @@ function App() {
         name="getPrinters"
         list={PrinterList}
         create={PrinterCreate}
-        edit={PrintersEdit}
         icon={LocalPrintshopIcon}
         options={{ label: "Printers" }}
+        show={OnePrintInventoryList}
       />
       <Resource
         name="getPlacesWithInfo"
@@ -410,12 +334,6 @@ function App() {
         list={InventoryList}
         icon={InventoryIcon}
         options={{ label: "Inventory" }}
-      />
-      <Resource
-        name="getPrinterInfoLogs"
-        list={OnePrintInventoryList}
-        icon={PrintRoundedIcon}
-        options={{ label: "Printer info logs" }}
       />
       <Resource
         name="getCloseShiftStatistics"

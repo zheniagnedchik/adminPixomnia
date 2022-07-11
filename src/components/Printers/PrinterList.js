@@ -7,16 +7,14 @@ import {
   DeleteButton,
   DateField,
 } from "react-admin";
+import OnePrintInventoryList from "../Inventory/OnePrintInventoryList";
 
 const PrinterList = (props) => {
   return (
     <List {...props}>
-      <Datagrid>
-        {/* <TextField source="id" /> */}
+      <Datagrid rowClick="show">
         <TextField source="printerId" label="Printer name" />
         <TextField source="regionId" label="Region Name" />
-        {/* <EditButton basePath="/printers" />
-        <DeleteButton basePath="/printers" /> */}
       </Datagrid>
     </List>
   );

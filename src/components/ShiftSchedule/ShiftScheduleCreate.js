@@ -11,6 +11,7 @@ import {
 } from "react-admin";
 import axios from "axios";
 import { URI } from "../../URLS";
+import { da } from "date-fns/locale";
 
 const ShiftScheduleListCreate = (props) => {
   const [placeId, setPlace] = useState([]);
@@ -26,21 +27,37 @@ const ShiftScheduleListCreate = (props) => {
         setPlace(place);
       });
   }, [setPlace]);
-  useEffect(() => {
-    axios
-      .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
-      .then((data) => {
-        console.log(data);
-        const employee = data.data.map((item) => {
-          return { id: item.email, name: item.email };
-        });
-        setEmployee(employee);
-      });
-  }, [setPlace]);
-  console.log("knjbvgfcghj", placeId);
+
+  const getEmployeeId = async (placeId) => {
+    const data = await axios.get(
+      `${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`
+    );
+    const place = data.data.filter((el) => el.placeId === placeId);
+    const employee = place[0].employeeIds.map((item) => {
+      return { id: item, name: item };
+    });
+    setEmployee(employee);
+  };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
+  //     .then((data) => {
+  //       console.log(data);
+  //       const employee = data.data.map((item) => {
+  //         return { id: item.email, name: item.email };
+  //       });
+  //       setEmployee(employee);
+  //     });
+  // }, [setPlace]);
+
   const shiftManager = [
     { id: true, name: true },
     { id: false, name: false },
+  ];
+  const categories = [
+    { name: "Tech", id: "tech" },
+    { name: "Lifestyle", id: "lifestyle" },
   ];
   return (
     <Create
@@ -50,7 +67,12 @@ const ShiftScheduleListCreate = (props) => {
       redirect="/getShiftSchedule"
     >
       <SimpleForm>
-        <SelectInput source="placeId" choices={placeId} label="PlaceId" />
+        <SelectInput
+          source="placeId"
+          choices={placeId}
+          label="PlaceId"
+          onChange={(e) => getEmployeeId(e.target.value)}
+        />
 
         <SelectInput
           source="employeeId"
