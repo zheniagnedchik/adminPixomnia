@@ -136,6 +136,54 @@ function App() {
         return new_data;
     }
   };
+  const sort = (field, order, array) => {
+    console.log("field", field);
+    switch (field) {
+      case "clockInTime":
+        if (order === "ASC") {
+          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
+        } else {
+          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
+        }
+      case "clockOutTime":
+        if (order === "ASC") {
+          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
+        } else {
+          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
+        }
+      case "startTime":
+        if (order === "ASC") {
+          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
+        } else {
+          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
+        }
+      case "endTime":
+        if (order === "ASC") {
+          return array.sort((a, b) => new Date(a[field]) - new Date(b[field]));
+        } else {
+          return array.sort((a, b) => new Date(b[field]) - new Date(a[field]));
+        }
+
+      default:
+        if (order === "ASC") {
+          return array.sort((a, b) => {
+            if (typeof a.field === "string") {
+              return a[field].localeCompare(b[field]);
+            } else {
+              return a[field] - b[field];
+            }
+          });
+        } else {
+          return array.sort((a, b) => {
+            if (typeof a.field === "string") {
+              return b[field].localeCompare(a[field]);
+            } else {
+              return b[field] - a[field];
+            }
+          });
+        }
+    }
+  };
   const test = async (type, resource, params) => {
     const body = "employeeId=reload&regionId=TX";
     console.log("type", type);
@@ -155,7 +203,9 @@ function App() {
         } else {
           test = [...newData];
         }
-        return { data: test, total: getListData.data.length };
+
+        const sortedList = sort(params.sort.field, params.sort.order, test);
+        return { data: sortedList, total: getListData.data.length };
       case CREATE:
         const createBody = setBody(resource, params);
         const create = await axios.post(`${URI}/${resource}`, createBody);
