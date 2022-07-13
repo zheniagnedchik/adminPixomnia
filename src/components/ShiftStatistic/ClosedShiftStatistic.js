@@ -1,10 +1,11 @@
 import React from "react";
 import { List, Datagrid, TextField, DateField } from "react-admin";
+import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
 
 const ClosedShiftStatistic = (props) => {
   return (
-    <List {...props}>
+    <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
         <TextField source="employeeId" label={<Label label="Employee Id" />} />
         <TextField

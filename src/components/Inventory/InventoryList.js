@@ -1,9 +1,10 @@
 import React from "react";
 import { List, TextField, Datagrid, DateField } from "react-admin";
+import FilterSideBar from "../../Utils/FilterSideBar";
 
 const InventoryList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
         <TextField source="employeeId" />
         <TextField source="placeId" />

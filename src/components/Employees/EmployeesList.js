@@ -7,10 +7,11 @@ import {
   DeleteButton,
   DateField,
 } from "react-admin";
+import FilterSideBar from "../../Utils/FilterSideBar";
 
 const EmployeesListList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
         {/* <TextField source="id" /> */}
         <TextField source="regionId" label="Region" />

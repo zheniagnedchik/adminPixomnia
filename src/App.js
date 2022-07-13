@@ -72,7 +72,7 @@ function App() {
   const getLink = (resource, params, body) => {
     const date = getCurrentDate(new Date());
     const curDate = new Date();
-    const dateInventoryLogs = curDate.setDate(curDate.getDate() - 2);
+    const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
 
     console.log(date);
     switch (resource) {
@@ -81,21 +81,25 @@ function App() {
       case "getRegions":
         return `${URI}/getRegions?employeeId=admin@pixomnia.com`;
       case "getInventoryLogs":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=TX&fromTime=${new Date(
-          dateInventoryLogs
-        ).toISOString()}`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
+          params.filter.region ? params.filter.region : "TX"
+        }&fromTime=${new Date(dateInventoryLogs).toISOString()}`;
       case "getPrinterInfoLogs":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&printerId=rePrinter01&fromTime=${new Date(
           dateInventoryLogs
         ).toISOString()}`;
       case "getCloseShiftStatistics":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=TX&fromTime=${new Date(
-          dateInventoryLogs
-        ).toISOString()}`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
+          params.filter.region ? params.filter.region : "TX"
+        }&fromTime=${new Date(dateInventoryLogs).toISOString()}`;
       case "getOpenShiftStatistics":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=TX`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
+          params.filter.region ? params.filter.region : "TX"
+        }`;
       default:
-        return `${URI}/${resource}?${body}`;
+        return `${URI}/${resource}?employeeId=reload&regionId=${
+          params.filter.region ? params.filter.region : "TX"
+        }`;
     }
   };
   const getNewData = (resource, getListData, params) => {

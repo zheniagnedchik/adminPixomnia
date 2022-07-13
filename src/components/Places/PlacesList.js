@@ -10,13 +10,20 @@ import {
   ChipField,
   ReferenceArrayField,
   ArrayField,
+  FilterButton,
+  TextInput,
+  FilterForm,
+  CreateButton,
+  FilterList,
+  FilterListItem,
 } from "react-admin";
+import FilterSideBar from "../../Utils/FilterSideBar";
 
 const PlacesList = (props) => {
   return (
-    <List {...props}>
-      <Datagrid rowClick="edit">
-        <TextField source="regionid" label="Region" />
+    <List {...props} aside={<FilterSideBar />}>
+      <Datagrid rowClick="edit" width={"80%"}>
+        <TextField source="regionId" label="Region" />
         <TextField source="placeId" label="Place id" />
         <TextField source="name" label="Place name" />
         <ArrayField source="newList" label="Printers">
