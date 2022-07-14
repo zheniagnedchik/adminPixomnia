@@ -16,9 +16,23 @@ import { da } from "date-fns/locale";
 const ShiftScheduleListCreate = (props) => {
   const [placeId, setPlace] = useState([]);
   const [employeeId, setEmployee] = useState([]);
+  const [region, setRegion] = useState(false);
+  const [regions, setRegions] = useState([]);
+  console.log("regions", region);
   useEffect(() => {
     axios
-      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`)
+      .get(`${URI}/getRegions?employeeId=admin@pixomnia.com`)
+      .then((data) => {
+        const reg = data.data.map((item) => {
+          return { id: item.regionId, name: item.regionId };
+        });
+        setRegions(reg);
+      });
+  }, [setRegions]);
+  const getPlaces = (region) => {
+    setRegion(region);
+    axios
+      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=${region}`)
       .then((data) => {
         console.log(data);
         const place = data.data.map((item) => {
@@ -26,11 +40,11 @@ const ShiftScheduleListCreate = (props) => {
         });
         setPlace(place);
       });
-  }, [setPlace]);
+  };
 
   const getEmployeeId = async (placeId) => {
     const data = await axios.get(
-      `${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`
+      `${URI}/getPlacesWithInfo?employeeId=reload&regionId=${region}`
     );
     const place = data.data.filter((el) => el.placeId === placeId);
     const employee = place[0].employeeIds.map((item) => {
@@ -38,18 +52,6 @@ const ShiftScheduleListCreate = (props) => {
     });
     setEmployee(employee);
   };
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
-  //     .then((data) => {
-  //       console.log(data);
-  //       const employee = data.data.map((item) => {
-  //         return { id: item.email, name: item.email };
-  //       });
-  //       setEmployee(employee);
-  //     });
-  // }, [setPlace]);
 
   const shiftManager = [
     { id: true, name: true },
@@ -67,6 +69,12 @@ const ShiftScheduleListCreate = (props) => {
       redirect="/getShiftSchedule"
     >
       <SimpleForm>
+        <SelectInput
+          source="regionId"
+          choices={regions}
+          label="RegionId"
+          onChange={(e) => getPlaces(e.target.value)}
+        />
         <SelectInput
           source="placeId"
           choices={placeId}

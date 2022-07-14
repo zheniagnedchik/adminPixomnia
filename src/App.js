@@ -45,8 +45,13 @@ import EmployeeGrid from "./components/ShiftStatistic/EmployeeGrid";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
 import OpenShiftStatistic from "./components/ShiftStatistic/OpenShiftStatistic";
 import { sort } from "./Utils/sort";
+import { useDispatch, useSelector } from "react-redux";
+import { setRegion } from "./reducers/regionReducer";
 
 function App() {
+  const dispatch = useDispatch();
+  const { region } = useSelector((state) => state.region);
+
   const setBody = (resource, params) => {
     switch (resource) {
       case "addPlace":
@@ -119,18 +124,19 @@ function App() {
           return {
             ...i,
             newList: printFilter,
-            id: index,
+            id: i.regionId ? `${i.regionId}-${index}` : index,
             employee: employeeFilter,
           };
         });
+        console.log("newData", new_data);
         return new_data;
 
       default:
         console.log(getListData);
         new_data = getListData.data.map((i, index) => {
-          return { ...i, id: index };
+          return { ...i, id: i.regionId ? `${i.regionId}-${index}` : index };
         });
-        console.log(new_data);
+        console.log("newData", new_data);
         return new_data;
     }
   };
@@ -166,8 +172,11 @@ function App() {
         return { data: createData };
       case GET_ONE:
         if (resource === "getPlacesWithInfo") {
-          console.log(resource);
-          const list = await axios.get(`${URI}/${resource}?${body}`);
+          const regionStr = params.id.split("-")[0];
+          await dispatch(setRegion(regionStr));
+          const list = await axios.get(
+            `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+          );
           let g = list.data.map((i, index) => {
             let printer = i.printerIds.map((it) => {
               return { item: it };
@@ -182,21 +191,30 @@ function App() {
             return {
               ...i,
               newList: printFilter,
-              id: index,
+              id: `${i.regionId}-${index}`,
               employee: employeeFilter,
             };
           });
           const filter = g.filter((item) => item.id == params.id);
-          return { data: filter[0] };
+          console.log("g", g);
+          return await { data: filter[0] };
         }
         if (resource === "getPrinters") {
+          const regionStr = params.id.split("-")[0];
+
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
-          const printerList = await axios.get(`${URI}/${resource}?${body}`);
+          const printerList = await axios.get(
+            `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+          );
+          console.log("printerList", printerList);
           const newArray = printerList.data.map((item, index) => {
-            return { ...item, id: index };
+            return { ...item, id: `${item.regionId}-${index}` };
           });
+          console.log(newArray);
+
           const printer = newArray.filter((el) => String(el.id) === params.id);
+          console.log(printer);
           const printerLog = await axios.get(
             `${URI}/getPrinterInfoLogs?employeeId=admin@pixomnia.com&printerId=${
               printer[0].printerId
@@ -210,7 +228,10 @@ function App() {
         }
 
       case UPDATE:
-        const udpList = await axios.get(`${URI}/${resource}?${body}`);
+        const regionStr = params.id.split("-")[0];
+        const udpList = await axios.get(
+          `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+        );
         let udp = udpList.data.map((i, index) => {
           let printer = i.printerIds.map((it) => {
             return { item: it };
@@ -225,11 +246,14 @@ function App() {
           return {
             ...i,
             newList: printFilters,
-            id: index,
+            id: `${i.regionId}-${index}`,
             employee: employeeFilters,
           };
         });
+        console.log(udp);
         const filters = udp.filter((item) => item.id == params.id);
+        console.log(filters);
+        console.log("params", params);
         const newPrinters = params.data.newList.filter(
           (e) => filters[0].newList.findIndex((i) => i.item == e.item) === -1
         );

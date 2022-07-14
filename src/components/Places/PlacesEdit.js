@@ -7,15 +7,24 @@ import {
   Edit,
   SimpleFormIterator,
   TextInput,
+  useRecordContext,
 } from "react-admin";
+import { useSelector } from "react-redux";
 import { URI } from "../../URLS";
 
 const PlacesEdit = (props) => {
   const [printerId, setPrinterId] = useState([]);
   const [employeeId, setEmployee] = useState([]);
+  const record = useRecordContext();
+  console.log(record);
+  const { region } = useSelector((state) => state.region);
+
   useEffect(() => {
+    const link = document.URL.split("-")[0];
+    const id = link.substr(link.length - 2);
+
     axios
-      .get(`${URI}/getPrinters?employeeId=reload&regionId=TX`)
+      .get(`${URI}/getPrinters?employeeId=reload&regionId=${id}`)
       .then((data) => {
         console.log(data);
         const printer = data.data.map((item) => {
@@ -25,8 +34,10 @@ const PlacesEdit = (props) => {
       });
   }, [setPrinterId]);
   useEffect(() => {
+    const link = document.URL.split("-")[0];
+    const id = link.substr(link.length - 2);
     axios
-      .get(`${URI}/getEmployees?employeeId=reload&regionId=TX`)
+      .get(`${URI}/getEmployees?employeeId=reload&regionId=${id}`)
       .then((data) => {
         console.log(data);
         const employee = data.data.map((item) => {
@@ -35,12 +46,14 @@ const PlacesEdit = (props) => {
         setEmployee(employee);
       });
   }, [setEmployee]);
+  console.log("props", props);
 
   return (
     <Edit
       title="Create a place"
       //   resource="linkEmployeeAndPlace"
       {...props}
+
       //   resource="addEmployee"
       //   redirect="/getEmployees"
     >
