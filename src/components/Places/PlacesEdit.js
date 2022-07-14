@@ -20,7 +20,7 @@ const PlacesEdit = (props) => {
   const { region } = useSelector((state) => state.region);
 
   useEffect(() => {
-    const link = document.URL.split("-")[0];
+    const link = document.URL.split("-")[1];
     const id = link.substr(link.length - 2);
 
     axios
@@ -34,7 +34,7 @@ const PlacesEdit = (props) => {
       });
   }, [setPrinterId]);
   useEffect(() => {
-    const link = document.URL.split("-")[0];
+    const link = document.URL.split("-")[1];
     const id = link.substr(link.length - 2);
     axios
       .get(`${URI}/getEmployees?employeeId=reload&regionId=${id}`)

@@ -172,7 +172,7 @@ function App() {
         return { data: createData };
       case GET_ONE:
         if (resource === "getPlacesWithInfo") {
-          const regionStr = params.id.split("-")[0];
+          const regionStr = params.id.split("-")[1];
           await dispatch(setRegion(regionStr));
           const list = await axios.get(
             `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
@@ -200,7 +200,7 @@ function App() {
           return await { data: filter[0] };
         }
         if (resource === "getPrinters") {
-          const regionStr = params.id.split("-")[0];
+          const regionStr = params.id.split("-")[1];
 
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
@@ -228,7 +228,7 @@ function App() {
         }
 
       case UPDATE:
-        const regionStr = params.id.split("-")[0];
+        const regionStr = params.id.split("-")[1];
         const udpList = await axios.get(
           `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
         );
