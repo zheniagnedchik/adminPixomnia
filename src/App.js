@@ -124,7 +124,7 @@ function App() {
           return {
             ...i,
             newList: printFilter,
-            id: i.regionId ? `${i.regionId}-${index}` : index,
+            id: i.regionId ? `${i.regionId}-id${index}` : index,
             employee: employeeFilter,
           };
         });
@@ -134,7 +134,7 @@ function App() {
       default:
         console.log(getListData);
         new_data = getListData.data.map((i, index) => {
-          return { ...i, id: i.regionId ? `${i.regionId}-${index}` : index };
+          return { ...i, id: i.regionId ? `${i.regionId}-id${index}` : index };
         });
         console.log("newData", new_data);
         return new_data;
@@ -172,7 +172,7 @@ function App() {
         return { data: createData };
       case GET_ONE:
         if (resource === "getPlacesWithInfo") {
-          const regionStr = params.id.split("-")[1];
+          const regionStr = params.id.split("-id")[0];
           await dispatch(setRegion(regionStr));
           const list = await axios.get(
             `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
@@ -191,7 +191,7 @@ function App() {
             return {
               ...i,
               newList: printFilter,
-              id: `${i.regionId}-${index}`,
+              id: `${i.regionId}-id${index}`,
               employee: employeeFilter,
             };
           });
@@ -200,7 +200,7 @@ function App() {
           return await { data: filter[0] };
         }
         if (resource === "getPrinters") {
-          const regionStr = params.id.split("-")[1];
+          const regionStr = params.id.split("-id")[0];
 
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
@@ -209,7 +209,7 @@ function App() {
           );
           console.log("printerList", printerList);
           const newArray = printerList.data.map((item, index) => {
-            return { ...item, id: `${item.regionId}-${index}` };
+            return { ...item, id: `${item.regionId}-id${index}` };
           });
           console.log(newArray);
 
@@ -228,7 +228,7 @@ function App() {
         }
 
       case UPDATE:
-        const regionStr = params.id.split("-")[1];
+        const regionStr = params.id.split("-id")[0];
         const udpList = await axios.get(
           `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
         );
@@ -246,7 +246,7 @@ function App() {
           return {
             ...i,
             newList: printFilters,
-            id: `${i.regionId}-${index}`,
+            id: `${i.regionId}-id${index}`,
             employee: employeeFilters,
           };
         });
