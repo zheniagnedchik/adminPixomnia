@@ -8,10 +8,11 @@ import {
   DeleteButton,
   DateField,
 } from "react-admin";
+import FilterShifts from "../../Utils/FilterShifts";
 
 const ShiftScheduleListList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} aside={<FilterShifts />}>
       <Datagrid>
         {/* <TextField source="shiftScheduleId" label="Shift Schedule Id" /> */}
         <TextField source="placeId" label="Place Id" />

@@ -82,7 +82,7 @@ function App() {
     console.log(date);
     switch (resource) {
       case "getShiftSchedule":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=malroze&fromTime=${date}`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}&fromTime=${date}`;
       case "getRegions":
         return `${URI}/getRegions?employeeId=admin@pixomnia.com`;
       case "getInventoryLogs":

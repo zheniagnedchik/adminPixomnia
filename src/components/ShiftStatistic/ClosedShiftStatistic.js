@@ -17,7 +17,7 @@ const ClosedShiftStatistic = (props) => {
         />
         <DateField
           source="clockOutTime"
-          label={<Label label="Clock In Time" />}
+          label={<Label label="clockOutTime" />}
           showTime
           locales="en-US"
         />
