@@ -24,7 +24,7 @@ const PlacesEdit = (props) => {
     const id = link.substr(link.length - 2);
 
     axios
-      .get(`${URI}/getPrinters?employeeId=reload&regionId=${id}`)
+      .get(`${URI}/getPrinters?employeeId=admin@pixomnia&regionId=${id}`)
       .then((data) => {
         console.log(data);
         const printer = data.data.map((item) => {
@@ -37,7 +37,7 @@ const PlacesEdit = (props) => {
     const link = document.URL.split("-id")[0];
     const id = link.substr(link.length - 2);
     axios
-      .get(`${URI}/getEmployees?employeeId=reload&regionId=${id}`)
+      .get(`${URI}/getEmployees?employeeId=admin@pixomnia&regionId=${id}`)
       .then((data) => {
         console.log(data);
         const employee = data.data.map((item) => {

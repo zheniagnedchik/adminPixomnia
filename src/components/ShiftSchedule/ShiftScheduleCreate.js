@@ -32,7 +32,9 @@ const ShiftScheduleListCreate = (props) => {
   const getPlaces = (region) => {
     setRegion(region);
     axios
-      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=${region}`)
+      .get(
+        `${URI}/getPlacesWithInfo?employeeId=admin@pixomnia&regionId=${region}`
+      )
       .then((data) => {
         console.log(data);
         const place = data.data.map((item) => {
@@ -44,7 +46,7 @@ const ShiftScheduleListCreate = (props) => {
 
   const getEmployeeId = async (placeId) => {
     const data = await axios.get(
-      `${URI}/getPlacesWithInfo?employeeId=reload&regionId=${region}`
+      `${URI}/getPlacesWithInfo?employeeId=admin@pixomnia&regionId=${region}`
     );
     const place = data.data.filter((el) => el.placeId === placeId);
     const employee = place[0].employeeIds.map((item) => {

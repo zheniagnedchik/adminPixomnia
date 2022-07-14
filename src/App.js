@@ -102,7 +102,7 @@ function App() {
           params.filter.region ? params.filter.region : "TX"
         }`;
       default:
-        return `${URI}/${resource}?employeeId=reload&regionId=${
+        return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${
           params.filter.region ? params.filter.region : "TX"
         }`;
     }
@@ -142,7 +142,7 @@ function App() {
   };
 
   const test = async (type, resource, params) => {
-    const body = "employeeId=reload&regionId=TX";
+    const body = "employeeId=admin@pixomnia&regionId=TX";
     console.log("type", type);
     console.log("resource", resource);
     console.log("params", params);
@@ -175,7 +175,7 @@ function App() {
           const regionStr = params.id.split("-id")[0];
           await dispatch(setRegion(regionStr));
           const list = await axios.get(
-            `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+            `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
           );
           let g = list.data.map((i, index) => {
             let printer = i.printerIds.map((it) => {
@@ -205,7 +205,7 @@ function App() {
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
           const printerList = await axios.get(
-            `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+            `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
           );
           console.log("printerList", printerList);
           const newArray = printerList.data.map((item, index) => {
@@ -230,7 +230,7 @@ function App() {
       case UPDATE:
         const regionStr = params.id.split("-id")[0];
         const udpList = await axios.get(
-          `${URI}/${resource}?employeeId=reload&regionId=${regionStr}`
+          `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
         );
         let udp = udpList.data.map((i, index) => {
           let printer = i.printerIds.map((it) => {

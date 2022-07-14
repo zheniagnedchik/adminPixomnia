@@ -16,7 +16,7 @@ const PrintersEdit = (props) => {
   console.log("regions", regions);
   useEffect(() => {
     axios
-      .get(`${URI}/getPlacesWithInfo?employeeId=reload&regionId=TX`)
+      .get(`${URI}/getPlacesWithInfo?employeeId=admin@pixomnia&regionId=TX`)
       .then((data) => {
         const reg = data.data.map((item) => {
           return { id: item.placeId, name: item.placeId };
