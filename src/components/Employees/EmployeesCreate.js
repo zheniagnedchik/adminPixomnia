@@ -22,6 +22,14 @@ const EmployeesCreate = (props) => {
         setRegions(reg);
       });
   }, [setRegions]);
+  const useImport = [
+    { id: true, name: true },
+    { id: false, name: false },
+  ];
+  const categories = [
+    { name: "Tech", id: "tech" },
+    { name: "Lifestyle", id: "lifestyle" },
+  ];
   return (
     <Create
       title="Create a employee"
@@ -34,6 +42,11 @@ const EmployeesCreate = (props) => {
         <TextInput source="email" label="Email" />
         <TextInput source="firstName" label="First Name" />
         <TextInput source="lastName" label="Last Name" />
+        <SelectInput
+          source="canUseImport"
+          choices={useImport}
+          label="canUseImport"
+        />
       </SimpleForm>
     </Create>
   );

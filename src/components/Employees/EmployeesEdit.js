@@ -24,19 +24,37 @@ const EmployeesEdit = (props) => {
         setRegions(reg);
       });
   }, [setRegions]);
+  const useImport = [
+    { id: true, name: true },
+    { id: false, name: false },
+  ];
+  const categories = [
+    { name: "Tech", id: "tech" },
+    { name: "Lifestyle", id: "lifestyle" },
+  ];
   return (
     <Edit
       title="Create a place"
       //   resource="linkEmployeeAndPlace"
       {...props}
-      //   resource="addEmployee"
+
       //   redirect="/getEmployees"
     >
       <SimpleForm>
         <TextInput source="email" label="Email" disabled />
         <TextInput source="firstName" label="First Name" disabled />
         <TextInput source="lastName" label="Last Name" disabled />
-        <SelectInput source="placeId" choices={regions} label="Place id" />
+        <SelectInput
+          source="placeId"
+          choices={regions}
+          label="Place id"
+          disabled
+        />
+        <SelectInput
+          source="canUseImport"
+          choices={useImport}
+          label="canUseImport"
+        />
       </SimpleForm>
     </Edit>
   );

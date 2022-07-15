@@ -226,88 +226,115 @@ function App() {
           const printers = { id: 0, printer: id };
           return { data: printers };
         }
+        if (resource === "getEmployees") {
+          console.log("resource", resource);
+          console.log("params", params);
+          const regionStr = params.id.split("-id")[0];
+          const employee = await axios.get(
+            `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
+          );
+          const newArray = employee.data.map((item, index) => {
+            return { ...item, id: `${item.regionId}-id${index}` };
+          });
+          console.log("array", newArray);
+          const filterArray = newArray.filter((el) => el.id == params.id);
+          return { data: filterArray[0] };
+        }
 
       case UPDATE:
-        const regionStr = params.id.split("-id")[0];
-        const udpList = await axios.get(
-          `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
-        );
-        let udp = udpList.data.map((i, index) => {
-          let printer = i.printerIds.map((it) => {
-            return { item: it };
+        if (resource == "getEmployees") {
+          axios.post(`${URI}/updateEmployee`, {
+            employee: {
+              canUseImport: params.data.canUseImport,
+              email: params.data.email,
+              firstName: params.data.firstName,
+              lastName: params.data.lastName,
+              regionId: params.data.regionId,
+            },
           });
+        } else {
+          const regionStr = params.id.split("-id")[0];
+          const udpList = await axios.get(
+            `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
+          );
+          let udp = udpList.data.map((i, index) => {
+            let printer = i.printerIds.map((it) => {
+              return { item: it };
+            });
 
-          let employee = i.employeeIds.map((it) => {
-            return { item: it };
+            let employee = i.employeeIds.map((it) => {
+              return { item: it };
+            });
+            const printFilters = printer.filter((el) => el.item.length > 0);
+            const employeeFilters = employee.filter((el) => el.item.length > 0);
+
+            return {
+              ...i,
+              newList: printFilters,
+              id: `${i.regionId}-id${index}`,
+              employee: employeeFilters,
+            };
           });
-          const printFilters = printer.filter((el) => el.item.length > 0);
-          const employeeFilters = employee.filter((el) => el.item.length > 0);
-
-          return {
-            ...i,
-            newList: printFilters,
-            id: `${i.regionId}-id${index}`,
-            employee: employeeFilters,
-          };
-        });
-        console.log(udp);
-        const filters = udp.filter((item) => item.id == params.id);
-        console.log(filters);
-        console.log("params", params);
-        const newPrinters = params.data.newList.filter(
-          (e) => filters[0].newList.findIndex((i) => i.item == e.item) === -1
-        );
-        const delPrinters = filters[0].newList.filter(
-          (e) => params.data.newList.findIndex((i) => i.item == e.item) === -1
-        );
-        const newEmployee = params.data.employee.filter(
-          (e) => filters[0].employee.findIndex((i) => i.item == e.item) === -1
-        );
-        const delEmployee = filters[0].employee.filter(
-          (e) => params.data.employee.findIndex((i) => i.item == e.item) === -1
-        );
-        if (newPrinters.length > 0) {
-          for (const item of newPrinters) {
-            await axios
-              .post(`${URI}/linkPrinterAndPlace`, {
-                placeId: params.data.placeId,
-                printerId: item.item,
-              })
-              .then((data) => console.log(data));
+          console.log(udp);
+          const filters = udp.filter((item) => item.id == params.id);
+          console.log(filters);
+          console.log("params", params);
+          const newPrinters = params.data.newList.filter(
+            (e) => filters[0].newList.findIndex((i) => i.item == e.item) === -1
+          );
+          const delPrinters = filters[0].newList.filter(
+            (e) => params.data.newList.findIndex((i) => i.item == e.item) === -1
+          );
+          const newEmployee = params.data.employee.filter(
+            (e) => filters[0].employee.findIndex((i) => i.item == e.item) === -1
+          );
+          const delEmployee = filters[0].employee.filter(
+            (e) =>
+              params.data.employee.findIndex((i) => i.item == e.item) === -1
+          );
+          if (newPrinters.length > 0) {
+            for (const item of newPrinters) {
+              await axios
+                .post(`${URI}/linkPrinterAndPlace`, {
+                  placeId: params.data.placeId,
+                  printerId: item.item,
+                })
+                .then((data) => console.log(data));
+            }
+          }
+          if (delPrinters.length > 0) {
+            for (const item of delPrinters) {
+              await axios
+                .post(`${URI}/unlinkPrinterFromPlace`, {
+                  placeId: params.data.placeId,
+                  printerId: item.item,
+                })
+                .then((data) => console.log(data));
+            }
+          }
+          if (newEmployee.length > 0) {
+            for (const item of newEmployee) {
+              await axios
+                .post(`${URI}/linkEmployeeAndPlace`, {
+                  placeId: params.data.placeId,
+                  employeeId: item.item,
+                })
+                .then((data) => console.log(data));
+            }
+          }
+          if (delEmployee.length > 0) {
+            for (const item of delEmployee) {
+              await axios
+                .post(`${URI}/unlinkEmployeeFromPlace`, {
+                  placeId: params.data.placeId,
+                  employeeId: item.item,
+                })
+                .then((data) => console.log(data));
+            }
           }
         }
-        if (delPrinters.length > 0) {
-          for (const item of delPrinters) {
-            await axios
-              .post(`${URI}/unlinkPrinterFromPlace`, {
-                placeId: params.data.placeId,
-                printerId: item.item,
-              })
-              .then((data) => console.log(data));
-          }
-        }
-        if (newEmployee.length > 0) {
-          for (const item of newEmployee) {
-            await axios
-              .post(`${URI}/linkEmployeeAndPlace`, {
-                placeId: params.data.placeId,
-                employeeId: item.item,
-              })
-              .then((data) => console.log(data));
-          }
-        }
-        if (delEmployee.length > 0) {
-          for (const item of delEmployee) {
-            await axios
-              .post(`${URI}/unlinkEmployeeFromPlace`, {
-                placeId: params.data.placeId,
-                employeeId: item.item,
-              })
-              .then((data) => console.log(data));
-          }
-        }
-
         return { data: params.data };
+
       case DELETE:
         console.log(params);
         axios.get(

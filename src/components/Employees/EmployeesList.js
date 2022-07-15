@@ -12,7 +12,7 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 const EmployeesListList = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
-      <Datagrid>
+      <Datagrid rowClick="edit">
         {/* <TextField source="id" /> */}
         <TextField source="regionId" label="Region" />
         <TextField source="email" label="Email" />
