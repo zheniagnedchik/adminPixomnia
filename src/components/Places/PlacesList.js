@@ -36,7 +36,7 @@ const PlacesList = (props) => {
             <ChipField source="item" />
           </SingleFieldList>
         </ArrayField>
-        <TextField source="Time zone" label="Time zone" />
+        <TextField source="timeZoneId" label="Time zone Id" />
         <TextField source="latitude" label="Latitude" />
         <TextField source="longitude" label="Longitude" />
         <TextField source="radius" label="Radius" />

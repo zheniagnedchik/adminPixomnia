@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Datagrid, TextField, DateField } from "react-admin";
+import { List, Datagrid, TextField, DateField, NumberField } from "react-admin";
 import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
 
@@ -41,17 +41,23 @@ const OpenShiftStatistic = (props) => {
           label={<Label label="Printed postcards" />}
         />
         <TextField source="soldItems" label={<Label label="Sold items" />} />
-        <TextField
+
+        <NumberField
           source="totalSoldInUsd"
-          label={<Label label="Total sold $" />}
+          label="Total sold"
+          locales="en-US"
+          options={{ style: "currency", currency: "USD" }}
         />
         <TextField
           source="soldItemsSquare"
           label={<Label label="Sold items square" />}
         />
-        <TextField
+
+        <NumberField
           source="totalSoldSquareInUsd"
-          label={<Label label="Total sold square $" />}
+          label="Total sold square"
+          locales="en-US"
+          options={{ style: "currency", currency: "USD" }}
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
