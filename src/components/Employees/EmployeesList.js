@@ -18,8 +18,7 @@ const EmployeesListList = (props) => {
         <TextField source="email" label="Email" />
         <TextField source="firstName" label="First Name" />
         <TextField source="lastName" label="Last Name" />
-
-        {/* <EditButton /> */}
+        <TextField source="canUseImport" label="Can use import" />
       </Datagrid>
     </List>
   );

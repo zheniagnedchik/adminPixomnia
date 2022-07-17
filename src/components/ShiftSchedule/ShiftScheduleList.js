@@ -15,17 +15,17 @@ const ShiftScheduleListList = (props) => {
     <List {...props} aside={<FilterShifts />}>
       <Datagrid>
         {/* <TextField source="shiftScheduleId" label="Shift Schedule Id" /> */}
-        <TextField source="placeId" label="Place Id" />
-        <TextField source="employeeId" label="Employee Id" />
+        <TextField source="placeId" label="Place" />
+        <TextField source="employeeId" label="Employee" />
         <DateField
           source="startTime"
-          label="Start Time"
+          label="Start time"
           showTime
           locales="en-US"
         />
         <DateField source="endTime" label="End Time" showTime locales="en-US" />
-        <TextField source="softStartInMinutes" label="Soft Start In Minutes" />
-        <TextField source="softEndInMinutes" label="Soft End In Minutes" />
+        <TextField source="softStartInMinutes" label="Soft start in minutes" />
+        <TextField source="softEndInMinutes" label="Soft end in minutes" />
         <DeleteButton />
       </Datagrid>
     </List>

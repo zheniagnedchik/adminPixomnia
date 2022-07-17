@@ -44,16 +44,11 @@ const EmployeesEdit = (props) => {
         <TextInput source="email" label="Email" disabled />
         <TextInput source="firstName" label="First Name" disabled />
         <TextInput source="lastName" label="Last Name" disabled />
-        <SelectInput
-          source="placeId"
-          choices={regions}
-          label="Place id"
-          disabled
-        />
+
         <SelectInput
           source="canUseImport"
           choices={useImport}
-          label="canUseImport"
+          label="Can use import"
         />
       </SimpleForm>
     </Edit>

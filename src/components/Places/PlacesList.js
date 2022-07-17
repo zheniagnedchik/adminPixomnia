@@ -24,7 +24,7 @@ const PlacesList = (props) => {
     <List {...props} aside={<FilterSideBar />}>
       <Datagrid rowClick="edit" width={"80%"}>
         <TextField source="regionId" label="Region" />
-        <TextField source="placeId" label="Place id" />
+        <TextField source="placeId" label="Place" />
         <TextField source="name" label="Place name" />
         <ArrayField source="newList" label="Printers">
           <SingleFieldList>
@@ -36,7 +36,7 @@ const PlacesList = (props) => {
             <ChipField source="item" />
           </SingleFieldList>
         </ArrayField>
-        <TextField source="timeZoneId" label="timeZoneId" />
+        <TextField source="Time zone" label="Time zone" />
         <TextField source="latitude" label="Latitude" />
         <TextField source="longitude" label="Longitude" />
         <TextField source="radius" label="Radius" />

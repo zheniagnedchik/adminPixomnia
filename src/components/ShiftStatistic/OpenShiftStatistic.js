@@ -7,11 +7,11 @@ const OpenShiftStatistic = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
-        <TextField source="employeeId" label={<Label label="Employee Id" />} />
-        <TextField source="placeId" label={<Label label="Place Id" />} />
+        <TextField source="employeeId" label={<Label label="Employee" />} />
+        <TextField source="placeId" label={<Label label="Place" />} />
         <DateField
           source="clockInTime"
-          label={<Label label="Clock In Time" />}
+          label={<Label label="Clock in time" />}
           showTime
           locales="en-US"
         />
@@ -30,20 +30,20 @@ const OpenShiftStatistic = (props) => {
         />
         <TextField
           source="uploadedFiles"
-          label={<Label label="Uploaded Files" />}
+          label={<Label label="Uploaded files" />}
         />
         <TextField
           source="printedPhotos"
-          label={<Label label="Printed Photos" />}
+          label={<Label label="Printed photos" />}
         />
         <TextField
           source="printedPostcards"
-          label={<Label label="Printed Postcards" />}
+          label={<Label label="Printed postcards" />}
         />
         <TextField source="soldItems" label={<Label label="Sold items" />} />
         <TextField
           source="totalSoldInUsd"
-          label={<Label label="Total sold in usd" />}
+          label={<Label label="Total sold $" />}
         />
         <TextField
           source="soldItemsSquare"
@@ -51,7 +51,7 @@ const OpenShiftStatistic = (props) => {
         />
         <TextField
           source="totalSoldSquareInUsd"
-          label={<Label label="Total sold square in usd" />}
+          label={<Label label="Total sold square $" />}
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
