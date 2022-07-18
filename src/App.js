@@ -75,9 +75,18 @@ function App() {
   };
 
   const getLink = (resource, params, body) => {
+    let dateInventoryLogs;
     const date = getCurrentDate(new Date());
     const curDate = new Date();
-    const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
+    if (params.filter.day) {
+      dateInventoryLogs = curDate.setDate(
+        curDate.getDate() - params.filter.day
+      );
+    } else {
+      dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
+    }
+
+    console.log("lfkkdfl", params);
 
     console.log(date);
     switch (resource) {

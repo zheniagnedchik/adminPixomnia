@@ -1,10 +1,11 @@
 import React from "react";
 import { List, TextField, Datagrid, DateField } from "react-admin";
+import FilterCloseShift from "../../Utils/FilterCloseShift";
 import FilterSideBar from "../../Utils/FilterSideBar";
 
 const InventoryList = (props) => {
   return (
-    <List {...props} aside={<FilterSideBar />}>
+    <List {...props} aside={<FilterCloseShift />}>
       <Datagrid>
         <TextField source="employeeId" />
         <TextField source="placeId" />

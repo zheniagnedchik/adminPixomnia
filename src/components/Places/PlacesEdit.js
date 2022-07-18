@@ -16,7 +16,7 @@ const PlacesEdit = (props) => {
   const [printerId, setPrinterId] = useState([]);
   const [employeeId, setEmployee] = useState([]);
   const record = useRecordContext();
-  console.log(record);
+  const [tier, setTier] = useState([]);
   const { region } = useSelector((state) => state.region);
 
   useEffect(() => {
@@ -46,7 +46,24 @@ const PlacesEdit = (props) => {
         setEmployee(employee);
       });
   }, [setEmployee]);
-  console.log("props", props);
+
+  useEffect(() => {
+    axios
+      .get(`${URI}/getTierInfo?employeeId=admin@pixomnia.com`)
+      .then((data) => {
+        console.log(typeof data.data);
+        const list = Object.entries(data.data).map((e) => ({ [e[0]]: e[1] }));
+        console.log(list);
+        const tier = list.map((item) => {
+          var key = Object.keys(item);
+          return { id: key[0], name: key[0] };
+        });
+
+        console.log(tier);
+
+        setTier(tier);
+      });
+  }, [setTier]);
 
   return (
     <Edit

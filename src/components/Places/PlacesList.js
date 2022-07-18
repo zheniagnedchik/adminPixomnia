@@ -22,10 +22,12 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 const PlacesList = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
-      <Datagrid rowClick="edit" width={"80%"}>
+      <Datagrid rowClick="edit" width={"80%"} rowClick="edit">
         <TextField source="regionId" label="Region" />
         <TextField source="placeId" label="Place" />
         <TextField source="name" label="Place name" />
+        <TextField source="tierId" label="Tier" />
+        <TextField source="hourTarget" label="Hour target" />
         <ArrayField source="newList" label="Printers">
           <SingleFieldList>
             <ChipField source="item" />

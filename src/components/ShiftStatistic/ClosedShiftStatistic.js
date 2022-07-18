@@ -1,11 +1,21 @@
 import React from "react";
-import { List, Datagrid, TextField, DateField, NumberField } from "react-admin";
+import {
+  List,
+  Datagrid,
+  TextField,
+  DateField,
+  NumberField,
+  ArrayField,
+  SingleFieldList,
+  ChipField,
+} from "react-admin";
+import FilterCloseShift from "../../Utils/FilterCloseShift";
 import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
 
 const ClosedShiftStatistic = (props) => {
   return (
-    <List {...props} aside={<FilterSideBar />}>
+    <List {...props} aside={<FilterCloseShift />}>
       <Datagrid>
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />
@@ -33,6 +43,10 @@ const ClosedShiftStatistic = (props) => {
         <TextField
           source="takenPhotos"
           label={<Label label="Taken photos" />}
+        />
+        <TextField
+          source="importPhotos"
+          label={<Label label="Imported Photo" />}
         />
         <TextField
           source="uploadedFiles"
@@ -66,6 +80,11 @@ const ClosedShiftStatistic = (props) => {
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
+        {/* <ArrayField source="tableWebLinks" label="tableWebLinks">
+          <SingleFieldList>
+            <ChipField source="item" />
+          </SingleFieldList>
+        </ArrayField> */}
       </Datagrid>
     </List>
   );

@@ -29,6 +29,10 @@ const OpenShiftStatistic = (props) => {
           label={<Label label="Taken photos" />}
         />
         <TextField
+          source="importPhotos"
+          label={<Label label="Imported Photo" />}
+        />
+        <TextField
           source="uploadedFiles"
           label={<Label label="Uploaded files" />}
         />
