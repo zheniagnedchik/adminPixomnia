@@ -12,11 +12,14 @@ import {
 import FilterCloseShift from "../../Utils/FilterCloseShift";
 import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
+import PurpleTextField from "../../Utils/TextField";
+import Links from "./Links";
 
 const ClosedShiftStatistic = (props) => {
   return (
     <List {...props} aside={<FilterCloseShift />}>
       <Datagrid>
+        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />
         <DateField
@@ -80,11 +83,6 @@ const ClosedShiftStatistic = (props) => {
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
-        {/* <ArrayField source="tableWebLinks" label="tableWebLinks">
-          <SingleFieldList>
-            <ChipField source="item" />
-          </SingleFieldList>
-        </ArrayField> */}
       </Datagrid>
     </List>
   );

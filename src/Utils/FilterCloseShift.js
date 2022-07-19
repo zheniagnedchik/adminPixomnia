@@ -32,10 +32,11 @@ const RegionFilter = () => {
   console.log(region);
   return (
     <FilterList label="Regions" defaultValue={{ region: "TX" }}>
-      {region.map((item) => (
+      {region.map((item, index) => (
         <FilterListItem
           label={item.regionId}
           value={{ region: item.regionId }}
+          key={index}
         />
       ))}
     </FilterList>

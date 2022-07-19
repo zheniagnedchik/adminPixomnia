@@ -100,8 +100,10 @@ const FilterShifts = (props) => {
               label="Places"
               onChange={(i) => getPlaces(i.target.value)}
             >
-              {regions.map((item) => (
-                <MenuItem value={item.id}>{item.name}</MenuItem>
+              {regions.map((item, index) => (
+                <MenuItem value={item.id} key={index}>
+                  {item.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

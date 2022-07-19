@@ -60,7 +60,11 @@ const PlaceCreate = (props) => {
         <NumberInput source="latitude" label="Latitude" />
         <NumberInput source="longitude" label="Longitude" />
         <NumberInput source="radius" label="Radius" />
-        <SelectInput source="timeZoneId" choices={timeZones} label="timeZone" />
+        <SelectInput
+          source="timeZoneId"
+          choices={timeZones}
+          label="Time zone"
+        />
       </SimpleForm>
     </Create>
   );

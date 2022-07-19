@@ -1,51 +1,31 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  Create,
   SimpleForm,
-  SelectInput,
-  ArrayInput,
-  Edit,
-  SimpleFormIterator,
   TextInput,
-  useRecordContext,
+  DateInput,
+  SelectInput,
+  NumberInput,
+  Edit,
 } from "react-admin";
-import { useSelector } from "react-redux";
+import { timeZones } from "../../timeZones";
 import { URI } from "../../URLS";
 
-const PlacesEdit = (props) => {
-  const [printerId, setPrinterId] = useState([]);
-  const [employeeId, setEmployee] = useState([]);
-  const record = useRecordContext();
+const PlaceCreate = (props) => {
+  const [regions, setRegions] = useState([]);
   const [tier, setTier] = useState([]);
-  const { region } = useSelector((state) => state.region);
-
+  console.log("regions", regions);
   useEffect(() => {
-    const link = document.URL.split("-id")[0];
-    const id = link.substr(link.length - 2);
-
     axios
-      .get(`${URI}/getPrinters?employeeId=admin@pixomnia&regionId=${id}`)
+      .get(`${URI}/getRegions?employeeId=admin@pixomnia.com`)
       .then((data) => {
-        console.log(data);
-        const printer = data.data.map((item) => {
-          return { id: item.printerId, name: item.printerId };
+        const reg = data.data.map((item) => {
+          return { id: item.regionId, name: item.regionId };
         });
-        setPrinterId(printer);
+        setRegions(reg);
       });
-  }, [setPrinterId]);
-  useEffect(() => {
-    const link = document.URL.split("-id")[0];
-    const id = link.substr(link.length - 2);
-    axios
-      .get(`${URI}/getEmployees?employeeId=admin@pixomnia&regionId=${id}`)
-      .then((data) => {
-        console.log(data);
-        const employee = data.data.map((item) => {
-          return { id: item.email, name: item.email };
-        });
-        setEmployee(employee);
-      });
-  }, [setEmployee]);
+  }, [setRegions]);
 
   useEffect(() => {
     axios
@@ -64,34 +44,38 @@ const PlacesEdit = (props) => {
         setTier(tier);
       });
   }, [setTier]);
-
   return (
     <Edit
       title="Create a place"
-      //   resource="linkEmployeeAndPlace"
       {...props}
-
-      //   resource="addEmployee"
-      //   redirect="/getEmployees"
+      mutationOptions={{ meta: { type: "edit" } }}
+      //   resource="addPlace"
+      //   redirect="/getPlacesWithInfo"
     >
       <SimpleForm>
-        <ArrayInput source="newList" label="Linled printer">
-          <SimpleFormIterator>
-            <SelectInput source="item" choices={printerId} label="PrinterId" />
-          </SimpleFormIterator>
-        </ArrayInput>
-        <ArrayInput source="employee" label="Linked employee">
-          <SimpleFormIterator>
-            <SelectInput
-              source="item"
-              choices={employeeId}
-              label="EmployeeId"
-            />
-          </SimpleFormIterator>
-        </ArrayInput>
+        <SelectInput
+          source="regionId"
+          choices={regions}
+          label="Region id"
+          disabled
+        />
+        {/* <TextInput source="placeId" label="Place Id" /> */}
+        <TextInput source="placeId" label="Place Id" disabled />
+        <TextInput source="name" label="Place Name" disabled />
+        <SelectInput source="tierId" choices={tier} label="Tier" />
+        <NumberInput source="hourTarget" label="Hour target" />
+        <NumberInput source="latitude" label="Latitude" disabled />
+        <NumberInput source="longitude" label="Longitude" disabled />
+        <NumberInput source="radius" label="Radius" disabled />
+        <SelectInput
+          source="timeZoneId"
+          choices={timeZones}
+          label="Time zone"
+          disabled
+        />
       </SimpleForm>
     </Edit>
   );
 };
 
-export default PlacesEdit;
+export default PlaceCreate;

@@ -7,13 +7,17 @@ import {
   EditButton,
   DeleteButton,
   DateField,
+  WrapperField,
 } from "react-admin";
 import FilterShifts from "../../Utils/FilterShifts";
+import PurpleTextField from "../../Utils/TextField";
 
 const ShiftScheduleListList = (props) => {
   return (
     <List {...props} aside={<FilterShifts />}>
       <Datagrid>
+        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
+
         {/* <TextField source="shiftScheduleId" label="Shift Schedule Id" /> */}
         <TextField source="placeId" label="Place" />
         <TextField source="employeeId" label="Employee" />

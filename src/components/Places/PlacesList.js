@@ -22,7 +22,7 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 const PlacesList = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
-      <Datagrid rowClick="edit" width={"80%"} rowClick="edit">
+      <Datagrid rowClick="edit" width={"80%"} rowClick="show">
         <TextField source="regionId" label="Region" />
         <TextField source="placeId" label="Place" />
         <TextField source="name" label="Place name" />
@@ -38,7 +38,7 @@ const PlacesList = (props) => {
             <ChipField source="item" />
           </SingleFieldList>
         </ArrayField>
-        <TextField source="timeZoneId" label="Time zone Id" />
+        <TextField source="timeZoneId" label="Time zone " />
         <TextField source="latitude" label="Latitude" />
         <TextField source="longitude" label="Longitude" />
         <TextField source="radius" label="Radius" />

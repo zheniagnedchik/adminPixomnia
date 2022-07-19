@@ -1,12 +1,23 @@
 import React from "react";
-import { List, Datagrid, TextField, DateField, NumberField } from "react-admin";
+import {
+  List,
+  Datagrid,
+  TextField,
+  DateField,
+  NumberField,
+  ArrayField,
+  SingleFieldList,
+} from "react-admin";
 import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
+import PurpleTextField from "../../Utils/TextField";
+import Links from "./Links";
 
 const OpenShiftStatistic = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
+        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />
         <DateField
@@ -65,6 +76,11 @@ const OpenShiftStatistic = (props) => {
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
+        <ArrayField source="tableWebLinks" label="Table web links">
+          <SingleFieldList>
+            <Links />
+          </SingleFieldList>
+        </ArrayField>
       </Datagrid>
     </List>
   );

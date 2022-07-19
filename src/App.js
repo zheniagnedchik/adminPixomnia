@@ -29,7 +29,7 @@ import PrintersEdit from "./components/Printers/PrintersEdit";
 import ShiftScheduleListList from "./components/ShiftSchedule/ShiftScheduleList";
 import ShiftScheduleListCreate from "./components/ShiftSchedule/ShiftScheduleCreate";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import PlacesEdit from "./components/Places/PlacesEdit";
+import PlacesShow from "./components/Places/PlacesShow";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PrintRoundedIcon from "@mui/icons-material/PrintRounded";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
@@ -47,6 +47,7 @@ import OpenShiftStatistic from "./components/ShiftStatistic/OpenShiftStatistic";
 import { sort } from "./Utils/sort";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegion } from "./reducers/regionReducer";
+import PlacesEdit from "./components/Places/PlacesEdit";
 
 function App() {
   const dispatch = useDispatch();
@@ -133,7 +134,7 @@ function App() {
           return {
             ...i,
             newList: printFilter,
-            id: i.regionId ? `${i.regionId}-id${index}` : index,
+            id: i.regionId ? `regid${i.regionId}regid-id${index}` : index,
             employee: employeeFilter,
           };
         });
@@ -143,7 +144,10 @@ function App() {
       default:
         console.log(getListData);
         new_data = getListData.data.map((i, index) => {
-          return { ...i, id: i.regionId ? `${i.regionId}-id${index}` : index };
+          return {
+            ...i,
+            id: i.regionId ? `regid${i.regionId}regid-id${index}` : index,
+          };
         });
         console.log("newData", new_data);
         return new_data;
@@ -181,7 +185,10 @@ function App() {
         return { data: createData };
       case GET_ONE:
         if (resource === "getPlacesWithInfo") {
-          const regionStr = params.id.split("-id")[0];
+          const regionStr = params.id.substring(
+            params.id.indexOf("regid") + 5,
+            params.id.lastIndexOf("regid-")
+          );
           await dispatch(setRegion(regionStr));
           const list = await axios.get(
             `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
@@ -200,7 +207,7 @@ function App() {
             return {
               ...i,
               newList: printFilter,
-              id: `${i.regionId}-id${index}`,
+              id: `regid${i.regionId}regid-id${index}`,
               employee: employeeFilter,
             };
           });
@@ -209,8 +216,11 @@ function App() {
           return await { data: filter[0] };
         }
         if (resource === "getPrinters") {
-          const regionStr = params.id.split("-id")[0];
-
+          const regionStr = params.id.substring(
+            params.id.indexOf("regid") + 5,
+            params.id.lastIndexOf("regid-")
+          );
+          console.log("regionstr", regionStr);
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
           const printerList = await axios.get(
@@ -218,7 +228,7 @@ function App() {
           );
           console.log("printerList", printerList);
           const newArray = printerList.data.map((item, index) => {
-            return { ...item, id: `${item.regionId}-id${index}` };
+            return { ...item, id: `regid${item.regionId}regid-id${index}` };
           });
           console.log(newArray);
 
@@ -238,12 +248,15 @@ function App() {
         if (resource === "getEmployees") {
           console.log("resource", resource);
           console.log("params", params);
-          const regionStr = params.id.split("-id")[0];
+          const regionStr = params.id.substring(
+            params.id.indexOf("regid") + 5,
+            params.id.lastIndexOf("regid-")
+          );
           const employee = await axios.get(
             `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
           );
           const newArray = employee.data.map((item, index) => {
-            return { ...item, id: `${item.regionId}-id${index}` };
+            return { ...item, id: `regid${item.regionId}regid-id${index}` };
           });
           console.log("array", newArray);
           const filterArray = newArray.filter((el) => el.id == params.id);
@@ -262,7 +275,26 @@ function App() {
             },
           });
         } else {
-          const regionStr = params.id.split("-id")[0];
+          if (params.meta) {
+            axios.post(`${URI}/updatePlace`, {
+              place: {
+                placeId: params.data.placeId,
+                name: params.data.name,
+                tierId: params.data.tierId,
+                hourTarget: params.data.hourTarget,
+                latitude: params.data.latitude,
+                longitude: params.data.longitude,
+                radius: params.data.radius,
+                timeZoneId: params.data.timeZoneId,
+                printerIds: params.data.printerIds,
+                employeeIds: params.data.employeeIds,
+              },
+            });
+          }
+          const regionStr = params.id.substring(
+            params.id.indexOf("regid") + 5,
+            params.id.lastIndexOf("regid-")
+          );
           const udpList = await axios.get(
             `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
           );
@@ -280,7 +312,7 @@ function App() {
             return {
               ...i,
               newList: printFilters,
-              id: `${i.regionId}-id${index}`,
+              id: `regid${i.regionId}regid-id${index}`,
               employee: employeeFilters,
             };
           });
@@ -354,65 +386,68 @@ function App() {
   };
 
   return (
-    <Admin dataProvider={test} layout={MyLayout}>
-      <Resource
-        name="getRegions"
-        list={RegionList}
-        create={RegionCreate}
-        icon={SouthAmericaIcon}
-        options={{ label: "Regions" }}
-      />
-      <Resource
-        name="getPrinters"
-        list={PrinterList}
-        create={PrinterCreate}
-        icon={LocalPrintshopIcon}
-        options={{ label: "Printers" }}
-        show={OnePrintInventoryList}
-      />
-      <Resource
-        name="getPlacesWithInfo"
-        list={PlacesList}
-        create={PlaceCreate}
-        icon={StorefrontIcon}
-        edit={PlacesEdit}
-        options={{ label: "Places" }}
-      />
-      <Resource
-        name="getEmployees"
-        list={EmployeesListList}
-        create={EmployeesCreate}
-        edit={EmployeesEdit}
-        icon={PeopleAltIcon}
-        options={{ label: "Employees" }}
-      />
-      <Resource
-        name="getShiftSchedule"
-        list={ShiftScheduleListList}
-        create={ShiftScheduleListCreate}
-        icon={WorkHistoryIcon}
-        options={{ label: "Shift" }}
-      />
-      <Resource
-        name="getInventoryLogs"
-        list={InventoryList}
-        icon={InventoryIcon}
-        options={{ label: "Inventory" }}
-      />
-      <Resource
-        name="getCloseShiftStatistics"
-        list={ClosedShiftStatistic}
-        icon={AcUnitIcon}
-        options={{ label: "Closed shift statistic" }}
-        show={EmployeeGrid}
-      />
-      <Resource
-        name="getOpenShiftStatistics"
-        list={OpenShiftStatistic}
-        icon={AddReactionIcon}
-        options={{ label: "Open shift statistic" }}
-      />
-    </Admin>
+    <div>
+      <Admin dataProvider={test} layout={MyLayout}>
+        <Resource
+          name="getRegions"
+          list={RegionList}
+          create={RegionCreate}
+          icon={SouthAmericaIcon}
+          options={{ label: "Regions" }}
+        />
+        <Resource
+          name="getPrinters"
+          list={PrinterList}
+          create={PrinterCreate}
+          icon={LocalPrintshopIcon}
+          options={{ label: "Printers" }}
+          show={OnePrintInventoryList}
+        />
+        <Resource
+          name="getPlacesWithInfo"
+          list={PlacesList}
+          create={PlaceCreate}
+          show={PlacesShow}
+          icon={StorefrontIcon}
+          edit={PlacesEdit}
+          options={{ label: "Places" }}
+        />
+        <Resource
+          name="getEmployees"
+          list={EmployeesListList}
+          create={EmployeesCreate}
+          edit={EmployeesEdit}
+          icon={PeopleAltIcon}
+          options={{ label: "Employees" }}
+        />
+        <Resource
+          name="getShiftSchedule"
+          list={ShiftScheduleListList}
+          create={ShiftScheduleListCreate}
+          icon={WorkHistoryIcon}
+          options={{ label: "Schedule" }}
+        />
+        <Resource
+          name="getInventoryLogs"
+          list={InventoryList}
+          icon={InventoryIcon}
+          options={{ label: "Inventory" }}
+        />
+        <Resource
+          name="getCloseShiftStatistics"
+          list={ClosedShiftStatistic}
+          icon={AcUnitIcon}
+          options={{ label: "Closed shift statistic" }}
+          show={EmployeeGrid}
+        />
+        <Resource
+          name="getOpenShiftStatistics"
+          list={OpenShiftStatistic}
+          icon={AddReactionIcon}
+          options={{ label: "Open shift statistic" }}
+        />
+      </Admin>
+    </div>
   );
 }
 

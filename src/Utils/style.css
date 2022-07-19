@@ -1,0 +1,18 @@
+.idBlock {
+  width: 45px;
+  height: 45px;
+  background-color: #fff;
+  border-radius: 100px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.textId {
+  display: none;
+}
+.container:hover .idBlock {
+  display: none;
+}
+.container:hover .textId {
+  display: block;
+}
