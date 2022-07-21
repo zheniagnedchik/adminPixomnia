@@ -8,17 +8,29 @@ import {
   DeleteButton,
   DateField,
   WrapperField,
+  TextInput,
+  DateTimeInput,
+  SimpleForm,
 } from "react-admin";
+import { Calendar, CompleteCalendar } from "@react-admin/ra-calendar";
 import FilterShifts from "../../Utils/FilterShifts";
 import PurpleTextField from "../../Utils/TextField";
 
+const EventContent = (event) => {
+  console.log("event", event);
+};
+const converter = (event) => ({
+  id: String(event.id),
+  title: event.employeeId,
+  start: event.startTime,
+  end: event.endTime,
+});
 const ShiftScheduleListList = (props) => {
   return (
     <List {...props} aside={<FilterShifts />}>
-      <Datagrid>
-        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
+      {/* <Calendar convertToEvent={converter} /> */}
 
-        {/* <TextField source="shiftScheduleId" label="Shift Schedule Id" /> */}
+      <Datagrid>
         <TextField source="placeId" label="Place" />
         <TextField source="employeeId" label="Employee" />
         <DateField

@@ -1,13 +1,34 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import { useRecordContext } from "ra-core";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+const test = [];
 const Links = (props) => {
-  console.log(props);
-  const toLink = (link) => {
-    document.location.href = link;
+  const record = useRecordContext();
+  console.log(record);
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event) => {
+    document.location.href = event.target.value;
   };
   return (
-    <div onClick={() => toLink(props.record)}>
-      <a>{props.record}</a>
+    <div style={{ width: 200 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Table web links</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={age}
+          label="Table web links"
+          onChange={handleChange}
+        >
+          {record.tableWebLinks.map((item, index) => (
+            <MenuItem value={item}>{item}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   );
 };

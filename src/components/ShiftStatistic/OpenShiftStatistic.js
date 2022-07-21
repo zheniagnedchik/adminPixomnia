@@ -17,7 +17,6 @@ const OpenShiftStatistic = (props) => {
   return (
     <List {...props} aside={<FilterSideBar />}>
       <Datagrid>
-        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />
         <DateField
@@ -76,11 +75,8 @@ const OpenShiftStatistic = (props) => {
         />
         <TextField source="soldByCard" label={<Label label="Sold by card" />} />
         <TextField source="soldByCash" label={<Label label="Sold by cash" />} />
-        <ArrayField source="tableWebLinks" label="Table web links">
-          <SingleFieldList>
-            <Links />
-          </SingleFieldList>
-        </ArrayField>
+
+        <Links />
       </Datagrid>
     </List>
   );

@@ -18,8 +18,7 @@ import Links from "./Links";
 const ClosedShiftStatistic = (props) => {
   return (
     <List {...props} aside={<FilterCloseShift />}>
-      <Datagrid>
-        <PurpleTextField field={"shiftScheduleId"} label={"Schedule id"} />
+      <Datagrid style={{ margin: 0 }}>
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />
         <DateField
@@ -49,7 +48,7 @@ const ClosedShiftStatistic = (props) => {
         />
         <TextField
           source="importPhotos"
-          label={<Label label="Imported Photo" />}
+          label={<Label label="Imported photo" />}
         />
         <TextField
           source="uploadedFiles"

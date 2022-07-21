@@ -52,7 +52,7 @@ const FilterSideBar = (props) => {
           sm: "block",
         },
         order: -1, // display on the left rather than on the right of the list
-        width: "15em",
+        width: "13.5em",
         marginRight: "1em",
         marginTop: "4em",
       }}

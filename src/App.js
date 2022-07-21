@@ -48,6 +48,8 @@ import { sort } from "./Utils/sort";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegion } from "./reducers/regionReducer";
 import PlacesEdit from "./components/Places/PlacesEdit";
+import CalendarShift from "./components/ShiftSchedule/Calendar";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 function App() {
   const dispatch = useDispatch();
@@ -445,6 +447,13 @@ function App() {
           list={OpenShiftStatistic}
           icon={AddReactionIcon}
           options={{ label: "Open shift statistic" }}
+        />
+        <Resource
+          name="Schedulecalendar"
+          list={CalendarShift}
+          options={{ label: "Schedule calendar" }}
+          // create={ShiftScheduleListCreate}
+          icon={CalendarMonthIcon}
         />
       </Admin>
     </div>

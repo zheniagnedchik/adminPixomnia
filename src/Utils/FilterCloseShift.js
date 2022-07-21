@@ -64,8 +64,8 @@ const FilterCloseShift = (props) => {
           sm: "block",
         },
         order: -1, // display on the left rather than on the right of the list
-        width: "15em",
-        marginRight: "1em",
+        width: "13.5em",
+        marginRight: "0.5em",
         marginTop: "4em",
       }}
     >
