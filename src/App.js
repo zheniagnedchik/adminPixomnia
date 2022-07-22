@@ -50,6 +50,10 @@ import { setRegion } from "./reducers/regionReducer";
 import PlacesEdit from "./components/Places/PlacesEdit";
 import CalendarShift from "./components/ShiftSchedule/Calendar";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import PostcardList from "./components/Postcards/PostcardsList";
+import PostcardCreate from "./components/Postcards/PostcardCreate";
+import PostCardEdit from "./components/Postcards/PostCardEdit";
+import ImageIcon from "@mui/icons-material/Image";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,6 +76,15 @@ function App() {
           shiftManager: params.data.shiftManager,
         };
         return param;
+      case "uploadPostcard":
+        console.log(params);
+        var data = new FormData();
+        data.append("employeeId", "admin@pixomnia");
+        data.append("placeId", params.data.placeId);
+        data.append("note", params.data.note);
+        data.append("file", params.data.pictures.rawFile);
+        console.log(data);
+        return data;
       default:
         return params.data;
     }
@@ -90,11 +103,17 @@ function App() {
     }
 
     console.log("lfkkdfl", params);
+    const start = new Date();
+    const newStart = new Date(start.setUTCHours(0, 0, 0, 0)).toISOString(
+      "en-US"
+    );
+
+    console.log(newStart);
 
     console.log(date);
     switch (resource) {
       case "getShiftSchedule":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}&fromTime=${date}`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}&fromTime=${newStart}`;
       case "getRegions":
         return `${URI}/getRegions?employeeId=admin@pixomnia.com`;
       case "getInventoryLogs":
@@ -113,6 +132,8 @@ function App() {
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
           params.filter.region ? params.filter.region : "TX"
         }`;
+      case "getPostcards":
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}`;
       default:
         return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${
           params.filter.region ? params.filter.region : "TX"
@@ -138,6 +159,15 @@ function App() {
             newList: printFilter,
             id: i.regionId ? `regid${i.regionId}regid-id${index}` : index,
             employee: employeeFilter,
+          };
+        });
+        console.log("newData", new_data);
+        return new_data;
+      case "getPostcards":
+        new_data = getListData.data.map((i, index) => {
+          return {
+            ...i,
+            id: i.placeId ? `regid${i.placeId}regid-id${index}` : index,
           };
         });
         console.log("newData", new_data);
@@ -179,13 +209,41 @@ function App() {
         const sortedList = sort(params.sort.field, params.sort.order, test);
         return { data: sortedList, total: getListData.data.length };
       case CREATE:
-        console.log(params);
+        let create;
+
         const createBody = setBody(resource, params);
-        const create = await axios.post(`${URI}/${resource}`, createBody);
+        if (resource === "uploadPostcard") {
+          const headers = {
+            headers: { "content-type": "multipart/form-data" },
+          };
+          create = await axios.post(`${URI}/${resource}`, createBody, headers);
+        } else {
+          create = await axios.post(`${URI}/${resource}`, createBody);
+        }
+
         const jsonParse = JSON.parse(create.data.responseJson);
         const createData = { id: 9, ...jsonParse };
         return { data: createData };
       case GET_ONE:
+        console.log(resource);
+        console.log(params);
+        if (resource === "getPostcards") {
+          console.log("test");
+          const regionStr = params.id.substring(
+            params.id.indexOf("regid") + 5,
+            params.id.lastIndexOf("regid-")
+          );
+          console.log(regionStr);
+          const list = await axios.get(
+            `${URI}/${resource}?employeeId=admin@pixomnia&placeId=${regionStr}`
+          );
+          const newList = list.data.map((item, index) => {
+            return { ...item, id: `regid${item.placeId}regid-id${index}` };
+          });
+          const filter = newList.filter((el) => el.id === params.id);
+          console.log(filter);
+          return { data: filter[0] };
+        }
         if (resource === "getPlacesWithInfo") {
           const regionStr = params.id.substring(
             params.id.indexOf("regid") + 5,
@@ -266,6 +324,16 @@ function App() {
         }
 
       case UPDATE:
+        console.log(params);
+        if (resource === "getPostcards") {
+          console.log(params);
+          axios.post(`${URI}/updatePostcard`, {
+            placeId: params.data.placeId,
+            status: params.data.status,
+            postcardId: params.data.postcardId,
+            note: params.data.note,
+          });
+        }
         if (resource == "getEmployees") {
           axios.post(`${URI}/updateEmployee`, {
             employee: {
@@ -276,7 +344,8 @@ function App() {
               regionId: params.data.regionId,
             },
           });
-        } else {
+        }
+        if (resource === "getPlacesWithInfo") {
           if (params.meta) {
             axios.post(`${URI}/updatePlace`, {
               place: {
@@ -376,13 +445,19 @@ function App() {
             }
           }
         }
-        return { data: params.data };
+        return { data: params.previousData };
 
       case DELETE:
-        console.log(params);
-        axios.get(
-          `${URI}/deleteShift?shiftScheduleId=${params.previousData.shiftScheduleId}`
-        );
+        if (resource === "getPostcards") {
+          axios.get(
+            `${URI}/deletePostcard?placeId=${params.previousData.placeId}&postcardId=${params.previousData.postcardId}`
+          );
+        } else {
+          axios.get(
+            `${URI}/deleteShift?shiftScheduleId=${params.previousData.shiftScheduleId}`
+          );
+        }
+
         return { data: params.data };
     }
   };
@@ -454,6 +529,14 @@ function App() {
           options={{ label: "Schedule calendar" }}
           // create={ShiftScheduleListCreate}
           icon={CalendarMonthIcon}
+        />
+        <Resource
+          name="getPostcards"
+          list={PostcardList}
+          edit={PostCardEdit}
+          options={{ label: "Postcards" }}
+          create={PostcardCreate}
+          icon={ImageIcon}
         />
       </Admin>
     </div>

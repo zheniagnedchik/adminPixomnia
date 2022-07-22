@@ -92,7 +92,7 @@ const FilterShifts = (props) => {
               onChange={(i) => getPlaces(i.target.value)}
             /> */}
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Places</InputLabel>
+            <InputLabel id="demo-simple-select-label">Regions</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"

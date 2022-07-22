@@ -16,6 +16,7 @@ import {
   CreateButton,
   FilterList,
   FilterListItem,
+  NumberField,
 } from "react-admin";
 import FilterSideBar from "../../Utils/FilterSideBar";
 
@@ -27,7 +28,13 @@ const PlacesList = (props) => {
         <TextField source="placeId" label="Place" />
         <TextField source="name" label="Place name" />
         <TextField source="tierId" label="Tier" />
-        <TextField source="hourTarget" label="Hour target" />
+        <NumberField
+          source="hourTarget"
+          label="Hourly sale target"
+          locales="en-US"
+          options={{ style: "currency", currency: "USD" }}
+        />
+
         <ArrayField source="newList" label="Printers">
           <SingleFieldList>
             <ChipField source="item" />

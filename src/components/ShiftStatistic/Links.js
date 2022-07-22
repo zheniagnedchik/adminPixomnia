@@ -24,8 +24,8 @@ const Links = (props) => {
           label="Table web links"
           onChange={handleChange}
         >
-          {record.tableWebLinks.map((item, index) => (
-            <MenuItem value={item}>{item}</MenuItem>
+          {record.tablesInfo.map((item, index) => (
+            <MenuItem value={item.value}>{item.key}</MenuItem>
           ))}
         </Select>
       </FormControl>

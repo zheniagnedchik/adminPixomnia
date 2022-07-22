@@ -62,7 +62,7 @@ const ClosedShiftStatistic = (props) => {
           source="printedPostcards"
           label={<Label label="Printed postcards" />}
         />
-        <TextField source="soldItems" label={<Label label="Sold items" />} />
+        <TextField source="soldItems" label={<Label label="Sale requests" />} />
         <NumberField
           source="totalSoldInUsd"
           label="Total sold"
