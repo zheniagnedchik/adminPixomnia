@@ -71,7 +71,6 @@ const PlaceCreate = (props) => {
           source="timeZoneId"
           choices={timeZones}
           label="Time zone"
-          disabled
         />
       </SimpleForm>
     </Edit>
