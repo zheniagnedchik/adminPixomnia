@@ -77,13 +77,11 @@ function App() {
         };
         return param;
       case "uploadPostcard":
-        console.log(params);
         var data = new FormData();
         data.append("employeeId", "admin@pixomnia");
         data.append("placeId", params.data.placeId);
         data.append("note", params.data.note);
         data.append("file", params.data.pictures.rawFile);
-        console.log(data);
         return data;
       default:
         return params.data;
@@ -101,19 +99,22 @@ function App() {
     } else {
       dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
     }
-
-    console.log("lfkkdfl", params);
+    const dateCalendar = curDate.setMonth(curDate.getMonth() - 1);
     const start = new Date();
     const newStart = new Date(start.setUTCHours(0, 0, 0, 0)).toISOString(
       "en-US"
     );
 
-    console.log(newStart);
-
-    console.log(date);
     switch (resource) {
       case "getShiftSchedule":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}&fromTime=${newStart}`;
+        if (params.meta.type === "calendar") {
+          return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${
+            params.filter.place
+          }&fromTime=${new Date(dateCalendar).toISOString()}`;
+        } else {
+          return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}&fromTime=${newStart}`;
+        }
+
       case "getRegions":
         return `${URI}/getRegions?employeeId=admin@pixomnia.com`;
       case "getInventoryLogs":
@@ -161,7 +162,7 @@ function App() {
             employee: employeeFilter,
           };
         });
-        console.log("newData", new_data);
+
         return new_data;
       case "getPostcards":
         new_data = getListData.data.map((i, index) => {
@@ -170,32 +171,31 @@ function App() {
             id: i.placeId ? `regid${i.placeId}regid-id${index}` : index,
           };
         });
-        console.log("newData", new_data);
+
         return new_data;
 
       default:
-        console.log(getListData);
         new_data = getListData.data.map((i, index) => {
           return {
             ...i,
             id: i.regionId ? `regid${i.regionId}regid-id${index}` : index,
           };
         });
-        console.log("newData", new_data);
+
         return new_data;
     }
   };
 
   const test = async (type, resource, params) => {
     const body = "employeeId=admin@pixomnia&regionId=TX";
-    console.log("type", type);
-    console.log("resource", resource);
-    console.log("params", params);
+
     switch (type) {
       case GET_LIST:
+        console.log(params);
         const link = getLink(resource, params, body);
         const getListData = await axios.get(link);
         const newData = getNewData(resource, getListData, params);
+        console.log(newData);
         let test;
         if (params.pagination.perPage <= newData.length) {
           test = newData.splice(
@@ -205,7 +205,7 @@ function App() {
         } else {
           test = [...newData];
         }
-        console.log(test);
+
         const sortedList = sort(params.sort.field, params.sort.order, test);
         return { data: sortedList, total: getListData.data.length };
       case CREATE:
@@ -225,15 +225,12 @@ function App() {
         const createData = { id: 9, ...jsonParse };
         return { data: createData };
       case GET_ONE:
-        console.log(resource);
-        console.log(params);
         if (resource === "getPostcards") {
-          console.log("test");
           const regionStr = params.id.substring(
             params.id.indexOf("regid") + 5,
             params.id.lastIndexOf("regid-")
           );
-          console.log(regionStr);
+
           const list = await axios.get(
             `${URI}/${resource}?employeeId=admin@pixomnia&placeId=${regionStr}`
           );
@@ -241,7 +238,7 @@ function App() {
             return { ...item, id: `regid${item.placeId}regid-id${index}` };
           });
           const filter = newList.filter((el) => el.id === params.id);
-          console.log(filter);
+
           return { data: filter[0] };
         }
         if (resource === "getPlacesWithInfo") {
@@ -263,7 +260,7 @@ function App() {
             });
             const printFilter = printer.filter((el) => el.item.length > 0);
             const employeeFilter = employee.filter((el) => el.item.length > 0);
-            console.log(printFilter);
+
             return {
               ...i,
               newList: printFilter,
@@ -272,7 +269,7 @@ function App() {
             };
           });
           const filter = g.filter((item) => item.id == params.id);
-          console.log("g", g);
+
           return await { data: filter[0] };
         }
         if (resource === "getPrinters") {
@@ -280,20 +277,19 @@ function App() {
             params.id.indexOf("regid") + 5,
             params.id.lastIndexOf("regid-")
           );
-          console.log("regionstr", regionStr);
+
           const curDate = new Date();
           const dateInventoryLogs = curDate.setDate(curDate.getDate() - 1);
           const printerList = await axios.get(
             `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${regionStr}`
           );
-          console.log("printerList", printerList);
+
           const newArray = printerList.data.map((item, index) => {
             return { ...item, id: `regid${item.regionId}regid-id${index}` };
           });
-          console.log(newArray);
 
           const printer = newArray.filter((el) => String(el.id) === params.id);
-          console.log(printer);
+
           const printerLog = await axios.get(
             `${URI}/getPrinterInfoLogs?employeeId=admin@pixomnia.com&printerId=${
               printer[0].printerId
@@ -306,8 +302,6 @@ function App() {
           return { data: printers };
         }
         if (resource === "getEmployees") {
-          console.log("resource", resource);
-          console.log("params", params);
           const regionStr = params.id.substring(
             params.id.indexOf("regid") + 5,
             params.id.lastIndexOf("regid-")
@@ -318,15 +312,13 @@ function App() {
           const newArray = employee.data.map((item, index) => {
             return { ...item, id: `regid${item.regionId}regid-id${index}` };
           });
-          console.log("array", newArray);
+
           const filterArray = newArray.filter((el) => el.id == params.id);
           return { data: filterArray[0] };
         }
 
       case UPDATE:
-        console.log(params);
         if (resource === "getPostcards") {
-          console.log(params);
           axios.post(`${URI}/updatePostcard`, {
             placeId: params.data.placeId,
             status: params.data.status,
@@ -387,10 +379,9 @@ function App() {
               employee: employeeFilters,
             };
           });
-          console.log(udp);
+
           const filters = udp.filter((item) => item.id == params.id);
-          console.log(filters);
-          console.log("params", params);
+
           const newPrinters = params.data.newList.filter(
             (e) => filters[0].newList.findIndex((i) => i.item == e.item) === -1
           );
@@ -498,7 +489,7 @@ function App() {
           options={{ label: "Employees" }}
         />
         <Resource
-          name="getShiftSchedule"
+          name="ScheduleList"
           list={ShiftScheduleListList}
           create={ShiftScheduleListCreate}
           icon={WorkHistoryIcon}
@@ -527,7 +518,6 @@ function App() {
           name="Schedulecalendar"
           list={CalendarShift}
           options={{ label: "Schedule calendar" }}
-          // create={ShiftScheduleListCreate}
           icon={CalendarMonthIcon}
         />
         <Resource

@@ -8,16 +8,45 @@ import {
   ArrayField,
   SingleFieldList,
   ChipField,
+  downloadCSV,
 } from "react-admin";
 import FilterCloseShift from "../../Utils/FilterCloseShift";
 import FilterSideBar from "../../Utils/FilterSideBar";
 import Label from "../../Utils/Label";
 import PurpleTextField from "../../Utils/TextField";
 import Links from "./Links";
+import { unparse as convertToCSV } from "papaparse/papaparse.min";
 
 const ClosedShiftStatistic = (props) => {
+  const exporter = (post) => {
+    const csv = convertToCSV({
+      data: post,
+      // select and order fields in the export
+      fields: [
+        "employeeId",
+        "placeId",
+        "shiftScheduleId",
+        "clockInTime",
+        "clockOutTime",
+        "totalMinutes",
+        "totalTables",
+        "takenPhotos",
+        "importPhotos",
+        "uploadedFiles",
+        "printedPhotos",
+        "printedPostcards",
+        "soldItems",
+        "totalSoldInUsd",
+        "soldItemsSquare",
+        "totalSoldSquareInUsd",
+        "soldByCard",
+        "soldByCash",
+      ],
+    });
+    downloadCSV(csv, "posts");
+  };
   return (
-    <List {...props} aside={<FilterCloseShift />}>
+    <List {...props} aside={<FilterCloseShift />} exporter={exporter}>
       <Datagrid style={{ margin: 0 }}>
         <TextField source="employeeId" label={<Label label="Employee" />} />
         <TextField source="placeId" label={<Label label="Place" />} />

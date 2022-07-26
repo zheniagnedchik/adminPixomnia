@@ -66,7 +66,7 @@ const PlaceCreate = (props) => {
         <NumberInput source="hourTarget" label="Hour target" />
         <NumberInput source="latitude" label="Latitude" disabled />
         <NumberInput source="longitude" label="Longitude" disabled />
-        <NumberInput source="radius" label="Radius" disabled />
+        <NumberInput source="radius" label="Radius" />
         <SelectInput
           source="timeZoneId"
           choices={timeZones}

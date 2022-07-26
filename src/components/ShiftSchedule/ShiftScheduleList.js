@@ -11,10 +11,12 @@ import {
   TextInput,
   DateTimeInput,
   SimpleForm,
+  useRecordContext,
 } from "react-admin";
 import { Calendar, CompleteCalendar } from "@react-admin/ra-calendar";
 import FilterShifts from "../../Utils/FilterShifts";
 import PurpleTextField from "../../Utils/TextField";
+import { Tooltip } from "@mui/material";
 
 const EventContent = (event) => {
   console.log("event", event);
@@ -26,11 +28,40 @@ const converter = (event) => ({
   end: event.endTime,
 });
 const ShiftScheduleListList = (props) => {
+  const Tool = () => {
+    const record = useRecordContext();
+    return (
+      <Tooltip title={record.shiftScheduleId}>
+        <div
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: 100,
+            backgroundColor: "#3a95e8",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 16,
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          i
+        </div>
+      </Tooltip>
+    );
+  };
   return (
-    <List {...props} aside={<FilterShifts />}>
+    <List
+      {...props}
+      aside={<FilterShifts />}
+      queryOptions={{ meta: { type: "list" } }}
+      resource="getShiftSchedule"
+    >
       {/* <Calendar convertToEvent={converter} /> */}
 
       <Datagrid>
+        <Tool />
         <TextField source="placeId" label="Place" />
         <TextField source="employeeId" label="Employee" />
         <DateField

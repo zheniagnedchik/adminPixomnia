@@ -23,9 +23,9 @@ const EventContent = (event) => {
 const getColor = (event) => {
   const time = new Date(event.startTime).getHours();
   if (time > 15) {
-    return "green";
+    return "#e8cc3a";
   } else {
-    return "blue";
+    return "#3a95e8";
   }
 };
 const getTextColor = (event) => {
@@ -54,9 +54,18 @@ const getStart = (date) => {
 };
 const CalendarShift = (props) => {
   return (
-    <List {...props} aside={<FilterShifts />} resource="getShiftSchedule">
+    <List
+      {...props}
+      aside={<FilterShifts />}
+      resource="getShiftSchedule"
+      queryOptions={{ meta: { type: "calendar" } }}
+      perPage={1000}
+      pagination={false}
+    >
       <Calendar
+        select={false}
         convertToEvent={converter}
+        eventClick={(e) => console.log(e)}
         eventContent={(eventContent) => {
           console.log(eventContent);
           return (
@@ -72,7 +81,7 @@ const CalendarShift = (props) => {
                   )}
                 </b>
               </div>
-              <i>{eventContent.event.title}</i>
+              <div style={{ fontSize: 12 }}>{eventContent.event.title}</div>
             </>
           );
         }}
