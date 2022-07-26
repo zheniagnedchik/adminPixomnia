@@ -18,10 +18,12 @@ const PostcardList = (props) => {
     <List {...props} aside={<FilterShifts />}>
       <Datagrid rowClick="edit">
         <ImageField source="url" label="Image" />
+        <ImageField source="proofUrl" label="Proof" />
         <TextField source="placeId" label="Place" />
         <TextField source="status" label="Status" />
-        <TextField source="note" label="Note" />
         <PurpleTextField label="Image rects" />
+        <TextField source="note" label="Note" />
+
         <EditButton />
         <DeleteButton />
       </Datagrid>
