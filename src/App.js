@@ -489,7 +489,7 @@ function App() {
           options={{ label: "Employees" }}
         />
         <Resource
-          name="ScheduleList"
+          name="getShiftSchedule"
           list={ShiftScheduleListList}
           create={ShiftScheduleListCreate}
           icon={WorkHistoryIcon}
