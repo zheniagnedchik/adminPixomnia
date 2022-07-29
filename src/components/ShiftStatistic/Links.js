@@ -4,14 +4,16 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { useRecordContext } from "ra-core";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import axios from "axios";
 const test = [];
 const Links = (props) => {
   const record = useRecordContext();
-  console.log(record);
   const [age, setAge] = React.useState("");
+  const handleChange = async (event) => {
+    console.log(event.target.value);
+    props.setUrls(event.target.value);
 
-  const handleChange = (event) => {
-    document.location.href = event.target.value;
+    // document.location.href = event.target.value;
   };
   return (
     <div style={{ width: 200 }}>
@@ -25,7 +27,9 @@ const Links = (props) => {
           onChange={handleChange}
         >
           {record.tablesInfo.map((item, index) => (
-            <MenuItem value={item.value}>{item.key}</MenuItem>
+            <MenuItem value={item.imageUrls}>
+              {item.timeCaption}({item.numberOfPhotos})
+            </MenuItem>
           ))}
         </Select>
       </FormControl>

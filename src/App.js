@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Admin,
-  Resource,
   fetchUtils,
   GET_LIST,
   CREATE,
@@ -11,6 +10,7 @@ import {
   useTheme,
   DELETE,
 } from "react-admin";
+import { Resource } from "@react-admin/ra-rbac";
 import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import RegionList from "./components/RegionList";
@@ -33,7 +33,7 @@ import PlacesShow from "./components/Places/PlacesShow";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PrintRoundedIcon from "@mui/icons-material/PrintRounded";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
-import { URI } from "./URLS";
+import { StorageUri, URI } from "./URLS";
 
 import { Button } from "@mui/material";
 import MyLayout from "./components/MyLayout/Layout";
@@ -54,6 +54,16 @@ import PostcardList from "./components/Postcards/PostcardsList";
 import PostcardCreate from "./components/Postcards/PostcardCreate";
 import PostCardEdit from "./components/Postcards/PostCardEdit";
 import ImageIcon from "@mui/icons-material/Image";
+import MyLogin from "./components/Login/Login";
+import authProvider from "./Utils/authProvider";
+import AccessList from "./components/Access/AcessList";
+import AccessCreate from "./components/Access/AccessCreate";
+import AccessEdit from "./components/Access/AccessEdit";
+import StorageList from "./components/Storage/StorageList";
+import StorageCreate from "./components/Storage/StorageCreate";
+import StorageLogList from "./components/StorageLog/StorageLogList";
+import StorageLogCreate from "./components/StorageLog/StorageLogCreate";
+import StorageShow from "./components/Storage/StorageShow";
 
 function App() {
   const dispatch = useDispatch();
@@ -83,6 +93,18 @@ function App() {
         data.append("note", params.data.note);
         data.append("file", params.data.pictures.rawFile);
         return data;
+      case "addStorage":
+        return {
+          storage: {
+            storageId: params.data.storageId,
+            regionId: params.data.regionId,
+            type: params.data.type,
+            timeZone: params.data.timeZoneId,
+            note: params.data.note,
+            blackFrames: params.data.blackFrames,
+            media: params.data.media,
+          },
+        };
       default:
         return params.data;
     }
@@ -135,6 +157,12 @@ function App() {
         }`;
       case "getPostcards":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}`;
+      case "getAccess":
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com`;
+      case "getStorages":
+        return `${StorageUri}/${resource}`;
+      case "getStorageLogs":
+        return `${StorageUri}/${resource}`;
       default:
         return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${
           params.filter.region ? params.filter.region : "TX"
@@ -185,15 +213,30 @@ function App() {
         return new_data;
     }
   };
-
+  const createPost = async (resource, createBody) => {
+    switch (resource) {
+      case "uploadPostcard":
+        const headers = {
+          headers: { "content-type": "multipart/form-data" },
+        };
+        return await axios.post(`${URI}/${resource}`, createBody, headers);
+      case "addStorage":
+        return axios.post(`${StorageUri}/${resource}`, createBody);
+      case "addStorageLog":
+        return axios.post(`${StorageUri}/${resource}`, createBody);
+      default:
+        return await axios.post(`${URI}/${resource}`, createBody);
+    }
+  };
   const test = async (type, resource, params) => {
+    console.log(type);
     const body = "employeeId=admin@pixomnia&regionId=TX";
 
     switch (type) {
       case GET_LIST:
-        console.log(params);
         const link = getLink(resource, params, body);
         const getListData = await axios.get(link);
+        console.log(getListData);
         const newData = getNewData(resource, getListData, params);
         console.log(newData);
         let test;
@@ -207,24 +250,56 @@ function App() {
         }
 
         const sortedList = sort(params.sort.field, params.sort.order, test);
+        console.log(sortedList);
         return { data: sortedList, total: getListData.data.length };
       case CREATE:
-        let create;
-
         const createBody = setBody(resource, params);
-        if (resource === "uploadPostcard") {
-          const headers = {
-            headers: { "content-type": "multipart/form-data" },
-          };
-          create = await axios.post(`${URI}/${resource}`, createBody, headers);
+        const create = createPost(resource, createBody);
+        let jsonParse;
+        if (resource === "addStorage" || resource === "addStorageLog") {
+          jsonParse = create.data;
         } else {
-          create = await axios.post(`${URI}/${resource}`, createBody);
+          jsonParse = JSON.parse(create.data.responseJson);
         }
-
-        const jsonParse = JSON.parse(create.data.responseJson);
         const createData = { id: 9, ...jsonParse };
         return { data: createData };
       case GET_ONE:
+        console.log(params);
+        if (resource === "getStorages") {
+          const listStorages = await axios.get(`${StorageUri}/${resource}`);
+          const newListStorage = listStorages.data.map((item, index) => {
+            return { ...item, id: `regidLAregid-id${index}` };
+          });
+          const filterAccess = newListStorage.filter(
+            (el) => el.id === params.id
+          );
+          console.log("dfojkdhv");
+          console.log(filterAccess);
+          const storage = await axios.get(
+            `${StorageUri}/getStorage?storageId=${filterAccess[0].storageId}`
+          );
+          console.log(storage);
+          if (storage) {
+            return { data: { ...storage, id: params.id } };
+          }
+        }
+        if (resource === "getAccess") {
+          console.log("kjhgfdghjkl");
+          const listAccess = await axios.get(
+            `${URI}/${resource}?employeeId=admin@pixomnia`
+          );
+
+          const newListAccess = listAccess.data.map((item, index) => {
+            return { ...item, id: index };
+          });
+          console.log(newListAccess);
+          console.log(params);
+          const filterAccess = newListAccess.filter(
+            (el) => el.id === Number(params.id)
+          );
+          console.log(filterAccess);
+          return { data: filterAccess[0] };
+        }
         if (resource === "getPostcards") {
           const regionStr = params.id.substring(
             params.id.indexOf("regid") + 5,
@@ -318,6 +393,9 @@ function App() {
         }
 
       case UPDATE:
+        if (resource === "getAccess") {
+          axios.post(`${URI}/updateAccess`, params.data);
+        }
         if (resource === "getPostcards") {
           axios.post(`${URI}/updatePostcard`, {
             placeId: params.data.placeId,
@@ -452,10 +530,20 @@ function App() {
         return { data: params.data };
     }
   };
-
+  const testProvider = (type, resource, params) => {
+    console.log(type);
+    console.log(resource);
+    console.log(params);
+  };
   return (
     <div>
-      <Admin dataProvider={test} layout={MyLayout}>
+      <Admin
+        dataProvider={test}
+        layout={MyLayout}
+        loginPage={MyLogin}
+        authProvider={authProvider}
+        requireAuth
+      >
         <Resource
           name="getRegions"
           list={RegionList}
@@ -526,6 +614,29 @@ function App() {
           edit={PostCardEdit}
           options={{ label: "Postcards" }}
           create={PostcardCreate}
+          icon={ImageIcon}
+        />
+        <Resource
+          name="getAccess"
+          list={AccessList}
+          create={AccessCreate}
+          edit={AccessEdit}
+          options={{ label: "Get access" }}
+          icon={ImageIcon}
+        />
+        <Resource
+          name="getStorages"
+          list={StorageList}
+          create={StorageCreate}
+          show={StorageShow}
+          options={{ label: "Storage" }}
+          icon={ImageIcon}
+        />
+        <Resource
+          name="getStorageLogs"
+          list={StorageLogList}
+          create={StorageLogCreate}
+          options={{ label: "Storage log" }}
           icon={ImageIcon}
         />
       </Admin>

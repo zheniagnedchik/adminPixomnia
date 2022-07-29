@@ -12,12 +12,14 @@ import {
 import axios from "axios";
 import { URI } from "../../URLS";
 import { da } from "date-fns/locale";
+import { useCanAccess } from "@react-admin/ra-rbac";
 
 const ShiftScheduleListCreate = (props) => {
   const [placeId, setPlace] = useState([]);
   const [employeeId, setEmployee] = useState([]);
   const [region, setRegion] = useState(false);
   const [regions, setRegions] = useState([]);
+
   console.log("regions", region);
   useEffect(() => {
     axios
