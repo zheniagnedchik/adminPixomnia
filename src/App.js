@@ -34,6 +34,8 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PrintRoundedIcon from "@mui/icons-material/PrintRounded";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import { StorageUri, URI } from "./URLS";
+import AccessibilityIcon from "@mui/icons-material/Accessibility";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 import { Button } from "@mui/material";
 import MyLayout from "./components/MyLayout/Layout";
@@ -64,6 +66,7 @@ import StorageCreate from "./components/Storage/StorageCreate";
 import StorageLogList from "./components/StorageLog/StorageLogList";
 import StorageLogCreate from "./components/StorageLog/StorageLogCreate";
 import StorageShow from "./components/Storage/StorageShow";
+import WarehouseIcon from "@mui/icons-material/Warehouse";
 
 function App() {
   const dispatch = useDispatch();
@@ -223,7 +226,7 @@ function App() {
       case "addStorage":
         return axios.post(`${StorageUri}/${resource}`, createBody);
       case "addStorageLog":
-        return axios.post(`${StorageUri}/${resource}`, createBody);
+        return await axios.post(`${StorageUri}/${resource}`, createBody);
       default:
         return await axios.post(`${URI}/${resource}`, createBody);
     }
@@ -254,7 +257,8 @@ function App() {
         return { data: sortedList, total: getListData.data.length };
       case CREATE:
         const createBody = setBody(resource, params);
-        const create = createPost(resource, createBody);
+        const create = await createPost(resource, createBody);
+        console.log(create);
         let jsonParse;
         if (resource === "addStorage" || resource === "addStorageLog") {
           jsonParse = create.data;
@@ -278,8 +282,9 @@ function App() {
           const storage = await axios.get(
             `${StorageUri}/getStorage?storageId=${filterAccess[0].storageId}`
           );
-          console.log(storage);
+
           if (storage) {
+            console.log("storage", storage);
             return { data: { ...storage, id: params.id } };
           }
         }
@@ -621,8 +626,8 @@ function App() {
           list={AccessList}
           create={AccessCreate}
           edit={AccessEdit}
-          options={{ label: "Get access" }}
-          icon={ImageIcon}
+          options={{ label: "Access" }}
+          icon={AccessibilityIcon}
         />
         <Resource
           name="getStorages"
@@ -630,14 +635,14 @@ function App() {
           create={StorageCreate}
           show={StorageShow}
           options={{ label: "Storage" }}
-          icon={ImageIcon}
+          icon={WarehouseIcon}
         />
         <Resource
           name="getStorageLogs"
           list={StorageLogList}
           create={StorageLogCreate}
           options={{ label: "Storage log" }}
-          icon={ImageIcon}
+          icon={LocalShippingIcon}
         />
       </Admin>
     </div>

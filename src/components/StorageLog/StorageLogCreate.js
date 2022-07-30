@@ -9,10 +9,11 @@ import {
   NumberInput,
 } from "react-admin";
 import { timeZones } from "../../timeZones";
-import { URI } from "../../URLS";
+import { StorageUri, URI } from "../../URLS";
 
 const StorageLogCreate = (props) => {
   const [regions, setRegions] = useState([]);
+  const [storageId, setStorageId] = useState([]);
   console.log("regions", regions);
   useEffect(() => {
     axios
@@ -24,6 +25,14 @@ const StorageLogCreate = (props) => {
         setRegions(reg);
       });
   }, [setRegions]);
+  useEffect(() => {
+    axios.get(`${StorageUri}/getStorages`).then((data) => {
+      const stor = data.data.map((item) => {
+        return { id: item.storageId, name: item.storageId };
+      });
+      setStorageId(stor);
+    });
+  }, [setStorageId]);
   const action = [{ id: "Transfer", name: "Transfer" }];
   const type = [
     { id: "Shipper", name: "Shipper" },
@@ -39,8 +48,13 @@ const StorageLogCreate = (props) => {
     >
       <SimpleForm>
         <SelectInput source="action" choices={action} />
-        <TextInput source="source" title="source" />
-        <TextInput source="destination" title="destination" />
+        <SelectInput source="source" choices={storageId} title="source" />
+        <SelectInput
+          source="destination"
+          choices={storageId}
+          title="destination"
+        />
+
         <TextInput source="note" title="note" />
         <NumberInput source="blackFrames" title="blackFrames" />
         <NumberInput source="media" title="media" />
