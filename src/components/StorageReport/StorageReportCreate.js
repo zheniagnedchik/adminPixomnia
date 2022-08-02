@@ -31,7 +31,7 @@ const StorageReportCreate = (props) => {
       title="Create a printer"
       {...props}
       resource="generateStorageReport"
-      redirect="/getStorages"
+      redirect="/getStorageReports"
     >
       <SimpleForm>
         <SelectInput source="regionId" choices={regions} />
