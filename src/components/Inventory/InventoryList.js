@@ -13,7 +13,7 @@ const InventoryList = (props) => {
         <TextField source="printerLifeCounter" />
         <TextField source="printerMediaCounter" />
         <TextField source="blackFrames" />
-        <TextField source="printerMediaInRolls" />
+        <TextField source="printerMedia" />
         <TextField source="reportType" />
         <DateField source="timeLog" showTime locales="en-US" />
       </Datagrid>

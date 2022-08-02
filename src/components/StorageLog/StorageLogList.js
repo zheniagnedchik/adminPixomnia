@@ -1,32 +1,17 @@
 import React from "react";
-import {
-  List,
-  Datagrid,
-  TextField,
-  EditButton,
-  DeleteButton,
-  DateField,
-  useRecordContext,
-} from "react-admin";
-
-// const ListRegion = () => {
-//   const record = useRecordContext();
-//   console.log(record);
-//   return record.regions.map((item, index) => <div key={index}>{item}</div>);
-// };
+import { List, Datagrid, TextField, DateField } from "react-admin";
+import FilterSideBar from "../../Utils/FilterSideBar";
 const StorageLogList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} aside={<FilterSideBar />}>
       <Datagrid rowClick="edit">
-        <TextField source="action" label="action" />
-        <TextField source="blackFrames" label="blackFrames" />
-        <TextField source="media" label="media" />
-        <TextField source="destination" label="destination" />
-
-        <TextField source="note" label="note" />
-        <TextField source="source" label="source" />
-        <TextField source="timeLog" label="timeLog" />
-        {/* <ListRegion label={"Regions"} /> */}
+        <TextField source="action" />
+        <TextField source="source" />
+        <TextField source="destination" />
+        <TextField source="blackFrames" />
+        <TextField source="media" />
+        <DateField source="timeLog" showTime locales="en-US" />
+        <TextField source="note" />
       </Datagrid>
     </List>
   );

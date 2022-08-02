@@ -67,6 +67,9 @@ import StorageLogList from "./components/StorageLog/StorageLogList";
 import StorageLogCreate from "./components/StorageLog/StorageLogCreate";
 import StorageShow from "./components/Storage/StorageShow";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
+import StorageReport from "./components/StorageReport/StorageReportList";
+import StorageReportCreate from "./components/StorageReport/StorageReportCreate";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 
 function App() {
   const dispatch = useDispatch();
@@ -144,7 +147,7 @@ function App() {
         return `${URI}/getRegions?employeeId=admin@pixomnia.com`;
       case "getInventoryLogs":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
-          params.filter.region ? params.filter.region : "TX"
+          params.filter.region
         }&fromTime=${new Date(dateInventoryLogs).toISOString()}`;
       case "getPrinterInfoLogs":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&printerId=rePrinter01&fromTime=${new Date(
@@ -152,24 +155,22 @@ function App() {
         ).toISOString()}`;
       case "getCloseShiftStatistics":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
-          params.filter.region ? params.filter.region : "TX"
+          params.filter.region
         }&fromTime=${new Date(dateInventoryLogs).toISOString()}`;
       case "getOpenShiftStatistics":
-        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${
-          params.filter.region ? params.filter.region : "TX"
-        }`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia.com&regionId=${params.filter.region}`;
       case "getPostcards":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com&placeId=${params.filter.place}`;
       case "getAccess":
         return `${URI}/${resource}?employeeId=admin@pixomnia.com`;
       case "getStorages":
-        return `${StorageUri}/${resource}`;
+        return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
       case "getStorageLogs":
-        return `${StorageUri}/${resource}`;
+        return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
+      case "getStorageReports":
+        return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
       default:
-        return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${
-          params.filter.region ? params.filter.region : "TX"
-        }`;
+        return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${params.filter.region}`;
     }
   };
   const getNewData = (resource, getListData, params) => {
@@ -226,6 +227,8 @@ function App() {
       case "addStorage":
         return axios.post(`${StorageUri}/${resource}`, createBody);
       case "addStorageLog":
+        return await axios.post(`${StorageUri}/${resource}`, createBody);
+      case "generateStorageReport":
         return await axios.post(`${StorageUri}/${resource}`, createBody);
       default:
         return await axios.post(`${URI}/${resource}`, createBody);
@@ -643,6 +646,13 @@ function App() {
           create={StorageLogCreate}
           options={{ label: "Storage log" }}
           icon={LocalShippingIcon}
+        />
+        <Resource
+          name="getStorageReports"
+          list={StorageReport}
+          create={StorageReportCreate}
+          options={{ label: "Storage report" }}
+          icon={AssessmentIcon}
         />
       </Admin>
     </div>

@@ -11,7 +11,7 @@ import {
 import { timeZones } from "../../timeZones";
 import { URI } from "../../URLS";
 
-const StorageCreate = (props) => {
+const StorageReportCreate = (props) => {
   const [regions, setRegions] = useState([]);
   console.log("regions", regions);
   useEffect(() => {
@@ -25,31 +25,28 @@ const StorageCreate = (props) => {
       });
   }, [setRegions]);
   const action = [{ id: "Transfer", name: "Transfer" }];
-  const type = [
-    { id: "Shipper", name: "Shipper" },
-    { id: "Storage", name: "Storage" },
-    { id: "Place", name: "Place" },
-  ];
+  const type = [{ id: "Custom01", name: "Custom01" }];
   return (
     <Create
       title="Create a printer"
       {...props}
-      resource="addStorage"
+      resource="generateStorageReport"
       redirect="/getStorages"
     >
       <SimpleForm>
-        <TextInput source="storageId" title="storageId" />
         <SelectInput source="regionId" choices={regions} />
-        <SelectInput source="type" choices={type} />
-        <SelectInput
+        <SelectInput source="reportType" choices={type} />
+        {/* <SelectInput
           source="timeZoneId"
           choices={timeZones}
           label="Time zone"
-        />
+        /> */}
         <TextInput source="note" title="Note" />
+        {/* <NumberInput source="blackFrames" title="blackFrames" />
+        <NumberInput source="media" title="media" /> */}
       </SimpleForm>
     </Create>
   );
 };
 
-export default StorageCreate;
+export default StorageReportCreate;
