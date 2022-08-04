@@ -3,7 +3,12 @@ import { List, Datagrid, TextField, DateField } from "react-admin";
 import FilterSideBar from "../../Utils/FilterSideBar";
 const StorageLogList = (props) => {
   return (
-    <List {...props} aside={<FilterSideBar />}>
+    <List
+      {...props}
+      aside={<FilterSideBar />}
+      perPage={1000}
+      pagination={false}
+    >
       <Datagrid rowClick="edit">
         <TextField source="action" />
         <TextField source="source" />

@@ -12,7 +12,12 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 
 const PrinterList = (props) => {
   return (
-    <List {...props} aside={<FilterSideBar />}>
+    <List
+      {...props}
+      aside={<FilterSideBar />}
+      perPage={1000}
+      pagination={false}
+    >
       <Datagrid rowClick="show">
         <TextField source="printerId" label="Printer name" />
         <TextField source="regionId" label="Region Name" />

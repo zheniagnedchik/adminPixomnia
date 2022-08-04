@@ -11,7 +11,12 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 
 const EmployeesListList = (props) => {
   return (
-    <List {...props} aside={<FilterSideBar />}>
+    <List
+      {...props}
+      aside={<FilterSideBar />}
+      perPage={1000}
+      pagination={false}
+    >
       <Datagrid rowClick="edit">
         {/* <TextField source="id" /> */}
         <TextField source="regionId" label="Region" />

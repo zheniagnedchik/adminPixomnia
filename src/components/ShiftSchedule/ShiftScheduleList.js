@@ -56,6 +56,8 @@ const ShiftScheduleListList = (props) => {
       {...props}
       aside={<FilterShifts />}
       queryOptions={{ meta: { type: "list" } }}
+      perPage={1000}
+      pagination={false}
     >
       {/* <Calendar convertToEvent={converter} /> */}
 

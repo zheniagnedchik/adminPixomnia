@@ -18,7 +18,22 @@ const WidthField = () => {
   );
 };
 
-const StorageReport = (props) => {
+const Storage = () => {
+  const record = useRecordContext();
+  console.log(record);
+  return (
+    <>
+      {record.storageIds.map((item, index) => {
+        return (
+          <div style={{ width: 140 }} key={index}>
+            <div>{item}</div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
+const StorageReportRegionList = (props) => {
   return (
     <List
       {...props}
@@ -27,7 +42,7 @@ const StorageReport = (props) => {
       pagination={false}
     >
       <Datagrid>
-        <TextField source="storageId" />
+        <Storage label={"Storages"} />
         <TextField source="reportType" />
         <TextField source="blackFramesStart" />
         <TextField source="blackFramesDelta" />
@@ -56,4 +71,4 @@ const StorageReport = (props) => {
   );
 };
 
-export default StorageReport;
+export default StorageReportRegionList;

@@ -16,7 +16,7 @@ const ListRegion = () => {
 };
 const AccessList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} perPage={1000} pagination={false}>
       <Datagrid rowClick="edit">
         <TextField source="email" label="Email" />
         <TextField source="role" label="Role" />

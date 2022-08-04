@@ -70,6 +70,8 @@ import WarehouseIcon from "@mui/icons-material/Warehouse";
 import StorageReport from "./components/StorageReport/StorageReportList";
 import StorageReportCreate from "./components/StorageReport/StorageReportCreate";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import StorageReportRegionList from "./components/StorageRegionReport/StorageRegionReportList";
+import AddchartIcon from "@mui/icons-material/Addchart";
 
 function App() {
   const dispatch = useDispatch();
@@ -168,6 +170,8 @@ function App() {
       case "getStorageLogs":
         return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
       case "getStorageReports":
+        return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
+      case "getStorageRegionReports":
         return `${StorageUri}/${resource}?regionId=${params.filter.region}`;
       default:
         return `${URI}/${resource}?employeeId=admin@pixomnia&regionId=${params.filter.region}`;
@@ -553,6 +557,14 @@ function App() {
         requireAuth
       >
         <Resource
+          name="getAccess"
+          list={AccessList}
+          create={AccessCreate}
+          edit={AccessEdit}
+          options={{ label: "Access" }}
+          icon={AccessibilityIcon}
+        />
+        <Resource
           name="getRegions"
           list={RegionList}
           create={RegionCreate}
@@ -624,14 +636,7 @@ function App() {
           create={PostcardCreate}
           icon={ImageIcon}
         />
-        <Resource
-          name="getAccess"
-          list={AccessList}
-          create={AccessCreate}
-          edit={AccessEdit}
-          options={{ label: "Access" }}
-          icon={AccessibilityIcon}
-        />
+
         <Resource
           name="getStorages"
           list={StorageList}
@@ -653,6 +658,12 @@ function App() {
           create={StorageReportCreate}
           options={{ label: "Storage report" }}
           icon={AssessmentIcon}
+        />
+        <Resource
+          name="getStorageRegionReports"
+          list={StorageReportRegionList}
+          options={{ label: "Storage region report" }}
+          icon={AddchartIcon}
         />
       </Admin>
     </div>

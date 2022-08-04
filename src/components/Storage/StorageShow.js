@@ -19,7 +19,7 @@ import { URI } from "../../URLS";
 const StorageShow = (props) => {
   return (
     <Show>
-      <List {...props}>
+      <List {...props} perPage={1000} pagination={false}>
         <Datagrid rowClick="show">
           <TextField source="blackFrames" />
           <TextField source="media" />

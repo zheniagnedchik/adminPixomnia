@@ -21,7 +21,12 @@ const OpenShiftStatistic = (props) => {
       {urls ? (
         <ImageGalery urls={urls} setUrls={setUrls} />
       ) : (
-        <List {...props} aside={<FilterSideBar />}>
+        <List
+          {...props}
+          aside={<FilterSideBar />}
+          perPage={1000}
+          pagination={false}
+        >
           <Datagrid>
             <TextField source="employeeId" label={<Label label="Employee" />} />
             <TextField source="placeId" label={<Label label="Place" />} />

@@ -5,7 +5,12 @@ import FilterSideBar from "../../Utils/FilterSideBar";
 
 const InventoryList = (props) => {
   return (
-    <List {...props} aside={<FilterCloseShift />}>
+    <List
+      {...props}
+      aside={<FilterCloseShift />}
+      perPage={1000}
+      pagination={false}
+    >
       <Datagrid>
         <TextField source="employeeId" />
         <TextField source="placeId" />

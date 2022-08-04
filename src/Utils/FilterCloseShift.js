@@ -17,10 +17,21 @@ import {
   FilterList,
   FilterListItem,
 } from "react-admin";
+import { Calendar } from "react-date-range";
 import { Box, Card, CardContent, styled } from "@mui/material";
 import axios from "axios";
 import { URI } from "../URLS";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css";
 const RegionFilter = () => {
+  const selectionRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  };
+  const handleSelect = (date) => {
+    console.log(date); // native Date object
+  };
   const [region, setRegion] = useState([]);
   useEffect(() => {
     axios
@@ -31,14 +42,16 @@ const RegionFilter = () => {
   }, [setRegion]);
   console.log(region);
   return (
-    <FilterList label="Regions" defaultValue={{ region: "TX" }}>
+    <FilterList label="Regions">
       {region.map((item, index) => (
         <FilterListItem
           label={item.regionId}
           value={{ region: item.regionId }}
           key={index}
+          defaultChecked
         />
       ))}
+      {/* <FilterListItem>test</FilterListItem> */}
     </FilterList>
   );
 };

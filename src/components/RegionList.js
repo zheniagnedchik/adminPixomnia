@@ -12,7 +12,7 @@ import {
 
 const RegionList = (props) => {
   return (
-    <List {...props}>
+    <List {...props} perPage={1000} pagination={false}>
       <Datagrid>
         {/* <TextField source="id" /> */}
         <TextField source="regionId" label="Region name" />
